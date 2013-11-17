@@ -1,0 +1,45 @@
+name: DumbPlots
+main: com.turt2live.dumbplots.DumbPlots
+version: maven-version-number
+description: Dumb, simple, plots
+author: Turt2Live
+website: http://dev.bukkit.org/bukkit-plugins/dumbplots/
+# softdepend: [DumbWarp]
+load: startup
+commands:
+  plot:
+    aliases: [plots]
+    description: Plot command
+
+permissions:
+    plots.debug:
+        description: Allow debug mode
+        default: op
+    plots.claim:
+        description: Allow claiming
+        default: true
+    plots.unclaim:
+        description: Allow unclaiming
+        default: true
+    plots.free:
+        description: Allow free command
+        default: true
+    plots.allow:
+        description: Allow allowing players
+        default: true
+    plots.disallow:
+        description: Allow disallowing players
+        default: true
+    plots.clear:
+        description: Allow plot clearing (reset)
+        default: true
+    plots.nuke:
+        description: Allow destroying a user's stuff
+        default: op
+    plots.teleport:
+        description: Allow teleporting to plots
+        default: true
+    plots.bypass:
+        description: Allow bypassing plot restrictions
+        default: op
+    

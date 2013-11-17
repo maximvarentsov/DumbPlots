@@ -1,0 +1,3 @@
+- Queue plot resets and 'lock' the plot while it's in queue. (For /plots unclaim lag-avoiding)
+- Change combat rules to red/green path&allowed = pvp, else no pvp (configurable) 
+- Permissions setup (* node, debug, bypass) - Update DBO too

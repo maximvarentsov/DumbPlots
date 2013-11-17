@@ -1,0 +1,17 @@
+# DumbPlots Configuration
+general:
+  # Prefix
+  prefix: '[DP]'
+# Worlds the plugin will manage
+worlds:
+- world
+# Options for world control. These options will only affect the worlds listed above
+control:
+  # Turns off things like creepers
+  no-mobs: true
+  # Turns off things like pigs
+  no-animals: true
+  # Turn off weather
+  no-weather: true
+  # True to allow people to hit others... with sticks... or swords? (false to disable cross-plot damage)
+  cross-plot-damage: false
