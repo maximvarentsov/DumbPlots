@@ -2,9 +2,10 @@
 general:
   # Prefix
   prefix: '[DP]'
+world-height: 16
 # Worlds the plugin will manage
 worlds:
-- world
+- DumbPlotsCreative
 # Options for world control. These options will only affect the worlds listed above
 control:
   # Turns off things like creepers

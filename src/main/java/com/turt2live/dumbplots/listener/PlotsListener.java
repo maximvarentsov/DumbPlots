@@ -2,6 +2,7 @@ package com.turt2live.dumbplots.listener;
 
 import java.util.List;
 
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
+import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
@@ -26,8 +28,10 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.ProjectileLaunchEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerPickupItemEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.bukkit.event.vehicle.VehicleDamageEvent;
 import org.bukkit.event.world.StructureGrowEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -393,6 +397,35 @@ public class PlotsListener implements Listener {
 				event.blockList().remove(i--);
 			}
 		}
+	}
+
+	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onTeleport(PlayerTeleportEvent event) {
+		Player player = event.getPlayer();
+		Location to = event.getTo();
+		Location from = event.getFrom();
+		if (!to.getWorld().getName().equalsIgnoreCase(from.getWorld().getName())) {
+			if (plugin.getPlotManager().isWorldManaged(to.getWorld())) {
+				if (player.getGameMode() != GameMode.CREATIVE) {
+					player.setGameMode(GameMode.CREATIVE);
+				}
+			}
+		}
+	}
+
+	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onGameModeChange(PlayerGameModeChangeEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.getPlotManager().isWorldManaged(player.getWorld())) {
+			if (event.getNewGameMode() != GameMode.CREATIVE && !player.hasPermission(Permission.BYPASS)) {
+				event.setCancelled(true);
+			}
+		}
+	}
+
+	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	public void onDispense(BlockDispenseEvent event) {
+		// TODO ?
 	}
 
 	private boolean isAllowed(Location location, Player player) {

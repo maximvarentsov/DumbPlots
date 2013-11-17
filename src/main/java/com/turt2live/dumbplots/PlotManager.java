@@ -20,7 +20,8 @@ public class PlotManager {
 	}
 
 	public String getPlotID(OfflinePlayer player) {
-		return player.getName() + "_" + getOwnedPlots(player).size(); // First plot will be turt2live_0, next turt2live_1, etc
+		return player.getName() + "_" + getOwnedPlots(player).size();
+		// First plot will be turt2live_0, next turt2live_1, etc
 	}
 
 	public List<Plot> getOwnedPlots(OfflinePlayer player) {

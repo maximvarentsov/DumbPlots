@@ -18,6 +18,7 @@ public class EnvironmentListener implements Listener {
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public void onEntitySpawn(CreatureSpawnEvent event) {
 		Location location = event.getLocation();
+		System.out.println(event.getEntity().getType().name());
 		if (DumbUtil.doControl(event.getEntityType()) && plugin.getPlotManager().isWorldManaged(location.getWorld())) {
 			if (DumbUtil.isPeacefulMob(event.getEntityType()) && plugin.getConfig().getBoolean("control.no-animals")) {
 				event.setCancelled(true);

@@ -1,6 +1,12 @@
 package com.turt2live.dumbplots;
 
+import java.util.List;
+
 import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.World.Environment;
+import org.bukkit.WorldCreator;
+import org.bukkit.WorldType;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
@@ -27,7 +33,7 @@ public class DumbPlots extends PluginWrapper implements Listener {
 		instance = this;
 
 		// Check configuration
-		getConfig().loadDefaults(getResource("resources/config.yml"));
+		getConfig().loadDefaults(getResource("config.yml"));
 		if (!getConfig().fileExists() || !getConfig().checkDefaults()) {
 			getConfig().saveDefaults();
 		}
@@ -44,6 +50,31 @@ public class DumbPlots extends PluginWrapper implements Listener {
 		getServer().getPluginManager().registerEvents(new DebugListener(), this);
 		getServer().getPluginManager().registerEvents(new PlotsListener(), this);
 		getServer().getPluginManager().registerEvents(new EnvironmentListener(), this);
+
+		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			@Override
+			public void run() {
+				// Load worlds for DumbPlots
+				List<String> worlds = getConfig().getStringList("worlds");
+				if (worlds != null) {
+					getLogger().info("Loading worlds...");
+					for(String worldname : worlds) {
+						getLogger().info("World: " + worldname);
+
+						WorldCreator creator = new WorldCreator(worldname);
+						creator.generateStructures(false);
+						creator.environment(Environment.NORMAL);
+						creator.type(WorldType.FLAT);
+						creator.generator(getDefaultWorldGenerator(worldname, getConfig().getInt("world-height", 16) + ""));
+
+						World world = getServer().createWorld(creator);
+						world.setSpawnLocation(0, getConfig().getInt("world-height", 16) + 2, 0);
+						world.setGameRuleValue("doMobSpawning", "false");
+					}
+					getLogger().info("Worlds loaded!");
+				}
+			}
+		});
 
 		// Spam console
 		getLogger().info("Loaded! Plugin by turt2live");
