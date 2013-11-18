@@ -6,7 +6,17 @@ import com.turt2live.dumbplots.util.DumbUtil;
 
 public enum CornerType {
 
-	A, B, C, D, UNKNOWN;
+	A((byte) 0x0),
+	B((byte) 0x1),
+	C((byte) 0x2),
+	D((byte) 0x3),
+	UNKNOWN((byte) 0x4);
+
+	public final byte data;
+
+	private CornerType(byte data) {
+		this.data = data;
+	}
 
 	public static CornerType getCornerType(Location location) {
 		if (DumbUtil.getChunkType(location.getChunk().getX(), location.getChunk().getZ()) == ChunkType.CORNER) {
