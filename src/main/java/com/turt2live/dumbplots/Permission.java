@@ -12,6 +12,5 @@ public class Permission {
 	public static final String NUKE = "plots.nuke";
 	public static final String TELEPORT = "plots.teleport";
 	public static final String BYPASS = "plots.bypass";
-	public static final String ADMIN = "plots.admin";
 
 }

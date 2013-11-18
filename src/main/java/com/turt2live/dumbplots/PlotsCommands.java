@@ -134,7 +134,7 @@ public class PlotsCommands implements CommandExecutor {
 						if (doCheck) {
 							if (plot != null) {
 								if (plot.getPlotType() == PlotType.CLAIMED) {
-									if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.ADMIN)) {
+									if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.BYPASS)) {
 										plot.setOwner("CONSOLE");
 										plot.setID(DumbUtil.generateUnclaimedID());
 										plot.setPlotType(PlotType.UNCLAIMED);
@@ -244,7 +244,7 @@ public class PlotsCommands implements CommandExecutor {
 								mustBePlayer(sender);
 							}
 							if (doCheck) {
-								if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.ADMIN)) {
+								if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.BYPASS)) {
 									OfflinePlayer player = DumbUtil.getPlayer(args[1]);
 									if (plot.isAllowed(player)) {
 										plugin.sendMessage(sender, ChatColor.RED + player.getName() + " is already allowed to build in " + plot.getID());
@@ -282,7 +282,7 @@ public class PlotsCommands implements CommandExecutor {
 								mustBePlayer(sender);
 							}
 							if (doCheck) {
-								if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.ADMIN)) {
+								if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.BYPASS)) {
 									OfflinePlayer player = DumbUtil.getPlayer(args[1]);
 									if (!plot.isAllowed(player)) {
 										plugin.sendMessage(sender, ChatColor.RED + player.getName() + " is already no allowed to build in " + plot.getID());
@@ -354,7 +354,7 @@ public class PlotsCommands implements CommandExecutor {
 							doCheck = false;
 						}
 						if (doCheck) {
-							if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.ADMIN)) {
+							if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.BYPASS)) {
 								ResetPlot.reset(plot);
 								plugin.sendMessage(sender, ChatColor.GREEN + "Your plot has been reset.");
 							} else {

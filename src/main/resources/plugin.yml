@@ -4,7 +4,6 @@ version: maven-version-number
 description: Dumb, simple, plots
 author: Turt2Live
 website: http://dev.bukkit.org/bukkit-plugins/dumbplots/
-# softdepend: [DumbWarp]
 load: startup
 commands:
   plot:
@@ -12,6 +11,20 @@ commands:
     description: Plot command
 
 permissions:
+    plots.*:
+        description: All DumbPlots permissions
+        default: op
+        children:
+            plots.debug: true
+            plots.claim: true
+            plots.unclaim: true
+            plots.free: true
+            plots.allow: true
+            plots.disallow: true
+            plots.clear: true
+            plots.nuke: true
+            plots.teleport: true
+            plots.bypass: true
     plots.debug:
         description: Allow debug mode
         default: op
