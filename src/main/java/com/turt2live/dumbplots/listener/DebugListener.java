@@ -117,9 +117,9 @@ public class DebugListener implements Listener {
 			if (block != null) {
 				ChunkType type = DumbUtil.getChunkType(block.getChunk().getX(), block.getChunk().getZ());
 				if (type == ChunkType.CORNER) {
-					PlotCorner corner = new PlotCorner(block.getChunk().getX(), block.getChunk().getZ());
+					PlotCorner corner = new PlotCorner(block.getChunk().getX(), block.getChunk().getZ(), block.getWorld().getName());
 					for(CornerType ct : CornerType.values()) {
-						player.sendMessage(ct.name() + " is owned by " + corner.getOwner(ct, block.getWorld().getName()) + ". PID = " + corner.getID(ct, block.getWorld().getName()));
+						player.sendMessage(ct.name() + " is owned by " + corner.getOwner(ct) + ". PID = " + corner.getID(ct));
 					}
 				} else {
 					player.sendMessage("Not a corner");

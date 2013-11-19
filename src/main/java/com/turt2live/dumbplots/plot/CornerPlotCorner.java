@@ -7,7 +7,7 @@ public class CornerPlotCorner {
 	private boolean valid = false;
 	private ChunkLoc location;
 
-	public CornerPlotCorner(String corner) {
+	public CornerPlotCorner(String corner, String world) {
 		// Format Example: A=10,4
 		// A=10,4 means "corner A is at chunk (10,4)"
 		String[] parts1 = corner.split("=");
@@ -35,7 +35,7 @@ public class CornerPlotCorner {
 			throw new IllegalArgumentException("Corner is not in the format C=X,Z (Error type 1)");
 		}
 		this.valid = true;
-		this.corner = new PlotCorner(x, z);
+		this.corner = new PlotCorner(x, z, world);
 		this.type = CornerType.valueOf(cornerType);
 		this.location = new ChunkLoc(x, z);
 	}

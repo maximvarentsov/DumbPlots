@@ -19,6 +19,8 @@ import com.turt2live.dumbplots.terrain.TerrainGenerator;
 
 public class DumbPlots extends PluginWrapper implements Listener {
 
+	// TODO: Less creation of objects, more managers. Rewrite corners and plot data store
+
 	private static DumbPlots instance;
 
 	public static DumbPlots getInstance() {

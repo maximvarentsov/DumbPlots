@@ -6,11 +6,11 @@ import com.turt2live.dumbplots.util.DumbUtil;
 
 public enum CornerType {
 
-	A((byte) 0x0),
-	B((byte) 0x1),
-	C((byte) 0x2),
-	D((byte) 0x3),
-	UNKNOWN((byte) 0x4);
+	A((byte) 0x5),
+	B((byte) 0x6),
+	C((byte) 0x7),
+	D((byte) 0x8),
+	UNKNOWN((byte) (-1));
 
 	public final byte data;
 
@@ -48,6 +48,15 @@ public enum CornerType {
 		default:
 			return UNKNOWN;
 		}
+	}
+
+	public static CornerType fromByte(byte bite) {
+		for(CornerType t : values()) {
+			if (t.data == bite) {
+				return t;
+			}
+		}
+		return UNKNOWN;
 	}
 
 }

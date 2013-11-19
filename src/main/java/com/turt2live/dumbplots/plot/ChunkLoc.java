@@ -60,16 +60,28 @@ public class ChunkLoc {
 	}
 
 	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + x;
+		result = prime * result + z;
+		return result;
+	}
+
+	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof ChunkLoc)) {
-			return false;
-		}
-		ChunkLoc c = (ChunkLoc) obj;
-		if (c.getX() == getX()
-				&& c.getZ() == getZ()) {
+		if (this == obj)
 			return true;
-		}
-		return false;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ChunkLoc other = (ChunkLoc) obj;
+		if (x != other.x)
+			return false;
+		if (z != other.z)
+			return false;
+		return true;
 	}
 
 }

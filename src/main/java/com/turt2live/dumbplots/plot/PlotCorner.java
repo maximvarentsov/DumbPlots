@@ -1,52 +1,53 @@
 package com.turt2live.dumbplots.plot;
 
-import java.io.File;
-import java.io.IOException;
-
-import com.feildmaster.lib.configuration.EnhancedConfiguration;
-import com.turt2live.dumbplots.DumbPlots;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlotCorner {
 
 	private int cx, cz;
-	private EnhancedConfiguration config;
+	private String world;
+	private Map<CornerType, Long> ids = new HashMap<CornerType, Long>();
 
-	public PlotCorner(int chunkX, int chunkZ) {
+	public PlotCorner(int chunkX, int chunkZ, String world) {
 		cx = chunkX;
 		cz = chunkZ;
-		DumbPlots plugin = DumbPlots.getInstance();
-		File path = new File(plugin.getDataFolder(), "plot_corners");
-		if (!path.exists()) {
-			path.mkdirs();
-		}
-		File file = new File(path, cx + "." + cz + ".yml");
-		if (!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch(IOException e) {} // Consume
-		}
-		config = new EnhancedConfiguration(file, plugin);
-		config.load();
+		this.world = world;
+
+		// TODO: Move this code?
+		//		File path = new File(plugin.getDataFolder(), "plot_corners");
+		//		if (!path.exists()) {
+		//			path.mkdirs();
+		//		}
+
+		// TODO: Load data
 	}
 
-	public String getOwner(CornerType corner, String world) {
-		config.load();
-		return config.getString(world + ".owner." + corner.name());
+	public String getOwner(CornerType corner) {
+		return "SOME GUY"; // TODO
 	}
 
-	public void setOwner(String owner, CornerType corner, String world) {
-		config.set(world + ".owner." + corner.name(), owner);
-		config.save();
+	public void setOwner(String owner, CornerType corner) {
+		// TODO
 	}
 
-	public String getID(CornerType corner, String world) {
-		config.load();
-		return config.getString(world + ".id." + corner.name());
+	public String getID(CornerType corner) {
+		return ids.get(corner).toString();
 	}
 
-	public void setID(String owner, CornerType corner, String world) {
-		config.set(world + ".id." + corner.name(), owner);
-		config.save();
+	public long getInternalId(CornerType corner) {
+		Long v = ids.get(corner);
+		if (v == null)
+			return 0;
+		return ids.get(corner);
+	}
+
+	public void setCorner(long id, CornerType corner) {
+		ids.put(corner, id);
+	}
+
+	public void setID(String owner, CornerType corner) {
+		// TODO
 	}
 
 	public int getX() {
@@ -55,6 +56,10 @@ public class PlotCorner {
 
 	public int getZ() {
 		return cz;
+	}
+
+	public String getWorld() {
+		return world;
 	}
 
 	@Override

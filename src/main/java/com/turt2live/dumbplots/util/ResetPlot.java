@@ -32,10 +32,10 @@ public class ResetPlot {
 						break;
 					}
 				}
-				PlotCorner plotCorner = new PlotCorner(chunkl.getX(), cz);
+				PlotCorner plotCorner = new PlotCorner(chunkl.getX(), cz, plot.getWorld().getName());
 				CornerType corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
-					if (plotCorner.getID(c, plot.getWorld().getName()) != null && plotCorner.getID(c, plot.getWorld().getName()).equals(plot.getID())) {
+					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getID())) {
 						corner = c;
 						break;
 					}
@@ -53,10 +53,10 @@ public class ResetPlot {
 						break;
 					}
 				}
-				plotCorner = new PlotCorner(cx, chunkl.getZ());
+				plotCorner = new PlotCorner(cx, chunkl.getZ(), plot.getWorld().getName());
 				corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
-					if (plotCorner.getID(c, plot.getWorld().getName()) != null && plotCorner.getID(c, plot.getWorld().getName()).equals(plot.getID())) {
+					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getID())) {
 						corner = c;
 						break;
 					}
@@ -65,10 +65,10 @@ public class ResetPlot {
 				condition = new Conditional(side);
 				break;
 			case CORNER:
-				plotCorner = new PlotCorner(chunkl.getX(), chunkl.getZ());
+				plotCorner = new PlotCorner(chunkl.getX(), chunkl.getZ(), plot.getWorld().getName());
 				corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
-					if (plotCorner.getID(c, plot.getWorld().getName()) != null && plotCorner.getID(c, plot.getWorld().getName()).equals(plot.getID())) {
+					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getID())) {
 						corner = c;
 						break;
 					}

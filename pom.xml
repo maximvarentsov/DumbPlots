@@ -11,6 +11,9 @@
     
     <bukkit.version>1.6.4-R2.0</bukkit.version>
     <configurationlib.version>1.1.3</configurationlib.version>
+    
+    <junit.version>4.11</junit.version>
+    <powermock.version>1.5</powermock.version>
   </properties>
 
   <!-- DEPENDENCIES -->
@@ -31,6 +34,32 @@
       <version>${configurationlib.version}</version>
       <type>jar</type>
       <scope>compile</scope>
+    </dependency>
+
+    <!-- JUnit -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>${junit.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Power Mock (JUnit) -->
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <type>jar</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Mockito -->
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito</artifactId>
+      <version>${powermock.version}</version>
+      <type>jar</type>
+      <scope>test</scope>
     </dependency>
     
     <dependency>
@@ -170,6 +199,29 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.11</version>
+        <configuration>
+          <forkMode>never</forkMode>
+          <threadCount>1</threadCount>
+          <perCoreThreadCount>false</perCoreThreadCount>
+          <includes>
+            <include>**/Test*.java</include>
+          </includes>
+          <!--<properties> <property> <name>listener</name> <value>com.turt2live.antishare.test.util.CleanupAfterTest</value> 
+            </property> </properties> -->
+        </configuration>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.maven.surefire</groupId>
+            <artifactId>surefire-junit47</artifactId>
+            <version>2.11</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
     </plugins>

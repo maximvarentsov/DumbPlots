@@ -246,8 +246,8 @@ public class DumbUtil {
 			}
 			// Try to identify the plot by the corner
 			CornerType corner = CornerType.getCornerType(newLocation);
-			PlotCorner pcorner = new PlotCorner(chunkX, chunkZ);
-			String id = pcorner.getID(corner, location.getWorld().getName());
+			PlotCorner pcorner = new PlotCorner(chunkX, chunkZ, location.getWorld().getName());
+			String id = pcorner.getID(corner);
 			if (id != null) {
 				return DumbPlots.getInstance().getPlotManager().getPlot(id);
 			} else {

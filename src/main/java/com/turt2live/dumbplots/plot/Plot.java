@@ -170,7 +170,7 @@ public class Plot {
 		// Load corners and chunks
 		List<String> ccorners = config.getStringList("corners");
 		for(String corner : ccorners) {
-			corners.add(new CornerPlotCorner(corner));
+			corners.add(new CornerPlotCorner(corner, getWorld().getName()));
 		}
 		List<String> cchunks = config.getStringList("chunks");
 		for(String chunk : cchunks) {
@@ -230,6 +230,9 @@ public class Plot {
 	}
 
 	public void setID(String id) {
+		if (id.length() > 50) {
+			throw new IllegalArgumentException();
+		}
 		config.set("id", id);
 		config.save();
 		assignCorners();
@@ -292,8 +295,8 @@ public class Plot {
 
 	public void assignCorners() {
 		for(CornerPlotCorner corner : getCorners()) {
-			corner.getCorner().setID(getID(), corner.getType(), getWorld().getName());
-			corner.getCorner().setOwner(getOwner(), corner.getType(), getWorld().getName());
+			corner.getCorner().setID(getID(), corner.getType());
+			corner.getCorner().setOwner(getOwner(), corner.getType());
 		}
 	}
 
