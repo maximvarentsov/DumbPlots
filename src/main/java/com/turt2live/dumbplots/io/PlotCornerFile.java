@@ -12,8 +12,8 @@ import com.turt2live.dumbplots.plot.PlotCorner;
 
 public class PlotCornerFile {
 
-	public static final byte HEADER_BYTE = 0xF;
-	public static final byte FOOTER_BYTE = 0x9;
+	public static final byte HEADER_BYTE = (byte) (-6);
+	public static final byte FOOTER_BYTE = (byte) (-12);
 	public static final int BLOCK_SIZE = 1 + 1 + (8 * CornerType.values().length) + CornerType.values().length; // Header, footer, data, data index
 
 	private File file;
@@ -23,18 +23,25 @@ public class PlotCornerFile {
 	private FileMode mode;
 	private boolean erase = false;
 	private ByteBuffer buffer = ByteBuffer.allocateDirect(BLOCK_SIZE);
+	private int maxCoord;
 
-	public PlotCornerFile(int rx, int ry, String world, File path) {
+	public PlotCornerFile(int rx, int ry, String world, File path, int max) {
 		if (!path.exists()) {
 			path.mkdirs();
 		}
 		this.file = new File(path, rx + "." + ry + "." + world + ".corner");
+		this.maxCoord = max;
+	}
+
+	private int getFilePosition(int cx, int cz, boolean read) {
+		return (cx * maxCoord * BLOCK_SIZE) + (cz * BLOCK_SIZE);
 	}
 
 	public void writeCorner(PlotCorner corner) {
 		if (mode == null || mode != FileMode.WRITE) {
 			throw new IllegalArgumentException();
 		}
+
 		// Write
 		buffer.clear();
 		buffer.position(0);
@@ -46,7 +53,7 @@ public class PlotCornerFile {
 		buffer.put(FOOTER_BYTE);
 		buffer.flip();
 		try {
-			channel.position((corner.getX() * BLOCK_SIZE) + corner.getZ());
+			channel.position(getFilePosition(corner.getX(), corner.getZ(), false));
 			channel.write(buffer);
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -54,7 +61,7 @@ public class PlotCornerFile {
 	}
 
 	public PlotCorner getCorner(int cx, int cz, String world) {
-		int position = (cx * BLOCK_SIZE) + cz;
+		int position = getFilePosition(cx, cz, true);
 		PlotCorner corner = new PlotCorner(cx, cz, world);
 		try {
 			channel.position(position);
@@ -71,15 +78,10 @@ public class PlotCornerFile {
 				}
 				byte tail = buffer.get();
 				if (tail != FOOTER_BYTE) {
-					// TODO: DEBUG WHY THIS HAPPENS
-					System.out.println("NO FOOT " + tail + " " + FOOTER_BYTE + " " + buffer.position() + " " + buffer.limit());
 					return null;
 				}
-			} else {
-				// TODO: DEBUG WHY THIS HAPPENS
-				System.out.println("NO HEAD " + head + " " + HEADER_BYTE + " " + buffer.position() + " " + buffer.limit());
-				return null;
 			}
+			// No head = no corner = empty corner
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

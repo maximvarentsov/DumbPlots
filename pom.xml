@@ -99,6 +99,7 @@
   <build>
     <defaultGoal>clean package</defaultGoal>
     <finalName>DumbPlots</finalName>
+    
     <!-- Distribution Management -->
     <extensions>
       <extension>
@@ -209,11 +210,7 @@
           <forkMode>never</forkMode>
           <threadCount>1</threadCount>
           <perCoreThreadCount>false</perCoreThreadCount>
-          <includes>
-            <include>**/Test*.java</include>
-          </includes>
-          <!--<properties> <property> <name>listener</name> <value>com.turt2live.antishare.test.util.CleanupAfterTest</value> 
-            </property> </properties> -->
+          <testSourceDirectory>src/test/java</testSourceDirectory>
         </configuration>
         <dependencies>
           <dependency>

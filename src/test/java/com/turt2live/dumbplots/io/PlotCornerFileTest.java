@@ -28,10 +28,11 @@ public class PlotCornerFileTest {
 	private static int rx = 9;
 	private static int ry = 5;
 	private static String world = "testWorld";
+	private static int maxWidth = 64;
 
 	@BeforeClass
 	public static void before() {
-		testFilePath = new File("target", "testCorners" + System.currentTimeMillis());
+		testFilePath = new File("target", "testCorners");
 		corner1 = new PlotCorner(8, 8, world);
 		corner2 = new PlotCorner(2, 8, world);
 		corner3 = new PlotCorner(8, 10, world);
@@ -41,19 +42,20 @@ public class PlotCornerFileTest {
 		largeCorner.setCorner(Long.MAX_VALUE / 2, CornerType.C);
 		largeCorner.setCorner(Long.MAX_VALUE - (Long.MAX_VALUE / 5), CornerType.D);
 		largeCorner.setCorner(Long.MIN_VALUE, CornerType.UNKNOWN);
+
+		// Wipe the file
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath, maxWidth);
+		file.erase();
+		file.open(FileMode.WRITE);
+		file.close();
 	}
 
 	@AfterClass
-	public static void after() {
-		boolean deleted = testFilePath.delete();
-		if (!deleted) {
-			System.out.println("FILE NOT DELETED");
-		}
-	}
+	public static void after() {}
 
 	@Test
 	public void AtestWrite() {
-		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath, maxWidth);
 		file.open(FileMode.WRITE);
 		file.writeCorner(corner1);
 		file.writeCorner(corner2);
@@ -63,7 +65,7 @@ public class PlotCornerFileTest {
 
 	@Test
 	public void BtestRead() {
-		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath, maxWidth);
 		file.open(FileMode.OPEN);
 		PlotCorner cornerA = file.getCorner(corner1.getX(), corner1.getZ(), corner1.getWorld());
 		PlotCorner cornerB = file.getCorner(corner2.getX(), corner2.getZ(), corner2.getWorld());
@@ -84,7 +86,7 @@ public class PlotCornerFileTest {
 
 	@Test
 	public void CtestOverwrite() {
-		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath, maxWidth);
 		file.erase();
 		file.open(FileMode.WRITE);
 		file.writeCorner(corner1);
@@ -93,7 +95,7 @@ public class PlotCornerFileTest {
 
 	@Test
 	public void DtestRead() {
-		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath, maxWidth);
 		file.open(FileMode.OPEN);
 		PlotCorner cornerA = file.getCorner(corner1.getX(), corner1.getZ(), corner1.getWorld());
 		PlotCorner cornerB = file.getCorner(corner2.getX(), corner2.getZ(), corner2.getWorld());
@@ -115,7 +117,7 @@ public class PlotCornerFileTest {
 	@Test
 	public void EtestReadWrite() {
 		// WRITE
-		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath, maxWidth);
 		file.open(FileMode.WRITE);
 		file.writeCorner(corner1);
 		file.writeCorner(corner2);
@@ -149,11 +151,11 @@ public class PlotCornerFileTest {
 		long totalRead = 0;
 		int iterations = 0;
 
-		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath, maxWidth);
 		file.erase();
 		file.open(FileMode.WRITE);
-		for(int x = 0; x < 32; x++) {
-			for(int z = 0; z < 32; z++) {
+		for(int x = 0; x < maxWidth; x++) {
+			for(int z = 0; z < maxWidth; z++) {
 				PlotCorner corner = new PlotCorner(x, z, world);
 				for(CornerType c : CornerType.values()) {
 					corner.setCorner(largeCorner.getInternalId(c), c);
@@ -170,8 +172,8 @@ public class PlotCornerFileTest {
 			}
 		}
 		file.open(FileMode.OPEN);
-		for(int x = 0; x < 32; x++) {
-			for(int z = 0; z < 32; z++) {
+		for(int x = 0; x < maxWidth; x++) {
+			for(int z = 0; z < maxWidth; z++) {
 				long startTime = System.nanoTime();
 				PlotCorner corner = file.getCorner(x, z, world);
 				long readTime = System.nanoTime() - startTime;
@@ -187,34 +189,21 @@ public class PlotCornerFileTest {
 			}
 		}
 
-		System.out.println("MIN WRITE TIME: " + minWrite + " ns");
-		System.out.println("MAX WRITE TIME: " + maxWrite + " ns");
-		System.out.println("AVG WRITE TIME: " + (totalWrite / iterations) + " ns");
-		System.out.println("");
+		System.out.println("MIN WRITE TIME: " + minWrite + " ns \t(" + (minWrite / 1000000) + " ms)");
+		System.out.println("MAX WRITE TIME: " + maxWrite + " ns \t(" + (maxWrite / 1000000) + " ms)");
+		System.out.println("AVG WRITE TIME: " + (totalWrite / iterations) + " ns \t(" + ((totalWrite / iterations) / 1000000) + " ms)");
+		System.out.println();
 
-		System.out.println("MIN WRITE TIME: " + (minWrite / 1000000) + " ms");
-		System.out.println("MAX WRITE TIME: " + (maxWrite / 1000000) + " ms");
-		System.out.println("AVG WRITE TIME: " + ((totalWrite / iterations) / 1000000) + " ms");
-		System.out.println("");
-
-		System.out.println("MIN READ TIME: " + minRead + " ns");
-		System.out.println("MAX READ TIME: " + maxRead + " ns");
-		System.out.println("AVG READ TIME: " + (totalRead / iterations) + " ns");
-		System.out.println("");
-
-		System.out.println("MIN READ TIME: " + (minRead / 1000000) + " ms");
-		System.out.println("MAX READ TIME: " + (maxRead / 1000000) + " ms");
-		System.out.println("AVG READ TIME: " + ((totalRead / iterations) / 1000000) + " ms");
-		System.out.println("");
+		System.out.println("MIN READ TIME: " + minRead + " ns \t(" + (minRead / 1000000) + " ms)");
+		System.out.println("MAX READ TIME: " + maxRead + " ns \t(" + (maxRead / 1000000) + " ms)");
+		System.out.println("AVG READ TIME: " + (totalRead / iterations) + " ns \t(" + ((totalRead / iterations) / 1000000) + " ms)");
+		System.out.println();
 
 		long b = file.size();
 		long kb = b / 1024;
 		long mb = kb / 1024;
 		long gb = mb / 1024;
-		System.out.println("FILE SIZE: " + b + " b");
-		System.out.println("FILE SIZE: " + kb + " kb");
-		System.out.println("FILE SIZE: " + mb + " mb");
-		System.out.println("FILE SIZE: " + gb + " gb");
+		System.out.println("FILE SIZE: " + b + " b | " + kb + " kb | " + mb + " mb | " + gb + " gb");
 
 	}
 
