@@ -24,8 +24,11 @@ public class PlotCornerFile {
 	private boolean erase = false;
 	private ByteBuffer buffer = ByteBuffer.allocateDirect(BLOCK_SIZE);
 
-	public PlotCornerFile(File file) {
-		this.file = file;
+	public PlotCornerFile(int rx, int ry, String world, File path) {
+		if (!path.exists()) {
+			path.mkdirs();
+		}
+		this.file = new File(path, rx + "." + ry + "." + world + ".corner");
 	}
 
 	public void writeCorner(PlotCorner corner) {
@@ -68,8 +71,14 @@ public class PlotCornerFile {
 				}
 				byte tail = buffer.get();
 				if (tail != FOOTER_BYTE) {
-					// Error?
+					// TODO: DEBUG WHY THIS HAPPENS
+					System.out.println("NO FOOT " + tail + " " + FOOTER_BYTE + " " + buffer.position() + " " + buffer.limit());
+					return null;
 				}
+			} else {
+				// TODO: DEBUG WHY THIS HAPPENS
+				System.out.println("NO HEAD " + head + " " + HEADER_BYTE + " " + buffer.position() + " " + buffer.limit());
+				return null;
 			}
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -108,6 +117,10 @@ public class PlotCornerFile {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public long size() {
+		return file.length();
 	}
 
 }

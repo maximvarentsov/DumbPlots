@@ -19,27 +19,41 @@ import com.turt2live.dumbplots.plot.PlotCorner;
 @FixMethodOrder (MethodSorters.NAME_ASCENDING)
 public class PlotCornerFileTest {
 
-	private static File testFile;
+	private static File testFilePath;
 	private static PlotCorner corner1;
 	private static PlotCorner corner2;
 	private static PlotCorner corner3;
+	private static PlotCorner largeCorner;
+
+	private static int rx = 9;
+	private static int ry = 5;
+	private static String world = "testWorld";
 
 	@BeforeClass
 	public static void before() {
-		testFile = new File("plotCorner.corner");
-		corner1 = new PlotCorner(8, 8, "test");
-		corner2 = new PlotCorner(2, 8, "test");
-		corner3 = new PlotCorner(8, 10, "test");
+		testFilePath = new File("target", "testCorners" + System.currentTimeMillis());
+		corner1 = new PlotCorner(8, 8, world);
+		corner2 = new PlotCorner(2, 8, world);
+		corner3 = new PlotCorner(8, 10, world);
+		largeCorner = new PlotCorner(0, 0, world);
+		largeCorner.setCorner(Long.MAX_VALUE, CornerType.A);
+		largeCorner.setCorner(Long.MAX_VALUE - 1, CornerType.B);
+		largeCorner.setCorner(Long.MAX_VALUE / 2, CornerType.C);
+		largeCorner.setCorner(Long.MAX_VALUE - (Long.MAX_VALUE / 5), CornerType.D);
+		largeCorner.setCorner(Long.MIN_VALUE, CornerType.UNKNOWN);
 	}
 
 	@AfterClass
 	public static void after() {
-		testFile.delete();
+		boolean deleted = testFilePath.delete();
+		if (!deleted) {
+			System.out.println("FILE NOT DELETED");
+		}
 	}
 
 	@Test
 	public void AtestWrite() {
-		PlotCornerFile file = new PlotCornerFile(testFile);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
 		file.open(FileMode.WRITE);
 		file.writeCorner(corner1);
 		file.writeCorner(corner2);
@@ -49,24 +63,20 @@ public class PlotCornerFileTest {
 
 	@Test
 	public void BtestRead() {
-		PlotCornerFile file = new PlotCornerFile(testFile);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
 		file.open(FileMode.OPEN);
 		PlotCorner cornerA = file.getCorner(corner1.getX(), corner1.getZ(), corner1.getWorld());
 		PlotCorner cornerB = file.getCorner(corner2.getX(), corner2.getZ(), corner2.getWorld());
 		PlotCorner cornerC = file.getCorner(corner3.getX(), corner3.getZ(), corner3.getWorld());
-		PlotCorner cornerD = file.getCorner(1000, 5, "test"); // Should be an empty corner
+		PlotCorner cornerD = file.getCorner(1000, 5, world); // Should be an empty corner
 
 		// Check corners
 		for(CornerType corner : CornerType.values()) {
-			System.out.println("A vs 1 :: CHECK " + corner.name());
 			assertEquals(corner1.getInternalId(corner), cornerA.getInternalId(corner));
-			System.out.println("B vs 2 :: CHECK " + corner.name());
 			assertEquals(corner2.getInternalId(corner), cornerB.getInternalId(corner));
-			System.out.println("C vs 3 :: CHECK " + corner.name());
 			assertEquals(corner3.getInternalId(corner), cornerC.getInternalId(corner));
 
 			// Check for null/0
-			System.out.println("D vs X :: CHECK " + corner.name() + " (should not exist)");
 			assertEquals(0, cornerD.getInternalId(corner));
 		}
 		file.close();
@@ -74,7 +84,7 @@ public class PlotCornerFileTest {
 
 	@Test
 	public void CtestOverwrite() {
-		PlotCornerFile file = new PlotCornerFile(testFile);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
 		file.erase();
 		file.open(FileMode.WRITE);
 		file.writeCorner(corner1);
@@ -83,24 +93,20 @@ public class PlotCornerFileTest {
 
 	@Test
 	public void DtestRead() {
-		PlotCornerFile file = new PlotCornerFile(testFile);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
 		file.open(FileMode.OPEN);
 		PlotCorner cornerA = file.getCorner(corner1.getX(), corner1.getZ(), corner1.getWorld());
 		PlotCorner cornerB = file.getCorner(corner2.getX(), corner2.getZ(), corner2.getWorld());
 		PlotCorner cornerC = file.getCorner(corner3.getX(), corner3.getZ(), corner3.getWorld());
-		PlotCorner cornerD = file.getCorner(1000, 5, "test"); // Should be an empty corner
+		PlotCorner cornerD = file.getCorner(1000, 5, world); // Should be an empty corner
 
 		// Check corners
 		for(CornerType corner : CornerType.values()) {
-			System.out.println("A vs 1 :: CHECK " + corner.name());
 			assertEquals(corner1.getInternalId(corner), cornerA.getInternalId(corner));
 
 			// Check for null/0
-			System.out.println("B vs X :: CHECK " + corner.name());
 			assertEquals(0, cornerB.getInternalId(corner));
-			System.out.println("C vs X :: CHECK " + corner.name());
 			assertEquals(0, cornerC.getInternalId(corner));
-			System.out.println("D vs X :: CHECK " + corner.name() + " (should not exist)");
 			assertEquals(0, cornerD.getInternalId(corner));
 		}
 		file.close();
@@ -109,7 +115,7 @@ public class PlotCornerFileTest {
 	@Test
 	public void EtestReadWrite() {
 		// WRITE
-		PlotCornerFile file = new PlotCornerFile(testFile);
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
 		file.open(FileMode.WRITE);
 		file.writeCorner(corner1);
 		file.writeCorner(corner2);
@@ -120,21 +126,96 @@ public class PlotCornerFileTest {
 		PlotCorner cornerA = file.getCorner(corner1.getX(), corner1.getZ(), corner1.getWorld());
 		PlotCorner cornerB = file.getCorner(corner2.getX(), corner2.getZ(), corner2.getWorld());
 		PlotCorner cornerC = file.getCorner(corner3.getX(), corner3.getZ(), corner3.getWorld());
-		PlotCorner cornerD = file.getCorner(1000, 5, "test"); // Should be an empty corner
+		PlotCorner cornerD = file.getCorner(1000, 5, world); // Should be an empty corner
 
 		// Check corners
 		for(CornerType corner : CornerType.values()) {
-			System.out.println("A vs 1 :: CHECK " + corner.name());
 			assertEquals(corner1.getInternalId(corner), cornerA.getInternalId(corner));
 
 			// Check for null/0
-			System.out.println("B vs X :: CHECK " + corner.name());
 			assertEquals(0, cornerB.getInternalId(corner));
-			System.out.println("C vs X :: CHECK " + corner.name());
 			assertEquals(0, cornerC.getInternalId(corner));
-			System.out.println("D vs X :: CHECK " + corner.name() + " (should not exist)");
 			assertEquals(0, cornerD.getInternalId(corner));
 		}
+	}
+
+	@Test
+	public void FtestSize() {
+		long minWrite = 0;
+		long maxWrite = 0;
+		long totalWrite = 0;
+		long minRead = 0;
+		long maxRead = 0;
+		long totalRead = 0;
+		int iterations = 0;
+
+		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath);
+		file.erase();
+		file.open(FileMode.WRITE);
+		for(int x = 0; x < 32; x++) {
+			for(int z = 0; z < 32; z++) {
+				PlotCorner corner = new PlotCorner(x, z, world);
+				for(CornerType c : CornerType.values()) {
+					corner.setCorner(largeCorner.getInternalId(c), c);
+				}
+				long startTime = System.nanoTime();
+				file.writeCorner(corner);
+				long writeTime = System.nanoTime() - startTime;
+				if (writeTime < minWrite)
+					minWrite = writeTime;
+				if (writeTime > maxWrite)
+					maxWrite = writeTime;
+				totalWrite += writeTime;
+				iterations++;
+			}
+		}
+		file.open(FileMode.OPEN);
+		for(int x = 0; x < 32; x++) {
+			for(int z = 0; z < 32; z++) {
+				long startTime = System.nanoTime();
+				PlotCorner corner = file.getCorner(x, z, world);
+				long readTime = System.nanoTime() - startTime;
+				if (readTime < minRead)
+					minRead = readTime;
+				if (readTime > maxRead)
+					maxRead = readTime;
+				totalRead += readTime;
+
+				for(CornerType c : CornerType.values()) {
+					assertEquals(largeCorner.getInternalId(c), corner.getInternalId(c));
+				}
+			}
+		}
+
+		System.out.println("MIN WRITE TIME: " + minWrite + " ns");
+		System.out.println("MAX WRITE TIME: " + maxWrite + " ns");
+		System.out.println("AVG WRITE TIME: " + (totalWrite / iterations) + " ns");
+		System.out.println("");
+
+		System.out.println("MIN WRITE TIME: " + (minWrite / 1000000) + " ms");
+		System.out.println("MAX WRITE TIME: " + (maxWrite / 1000000) + " ms");
+		System.out.println("AVG WRITE TIME: " + ((totalWrite / iterations) / 1000000) + " ms");
+		System.out.println("");
+
+		System.out.println("MIN READ TIME: " + minRead + " ns");
+		System.out.println("MAX READ TIME: " + maxRead + " ns");
+		System.out.println("AVG READ TIME: " + (totalRead / iterations) + " ns");
+		System.out.println("");
+
+		System.out.println("MIN READ TIME: " + (minRead / 1000000) + " ms");
+		System.out.println("MAX READ TIME: " + (maxRead / 1000000) + " ms");
+		System.out.println("AVG READ TIME: " + ((totalRead / iterations) / 1000000) + " ms");
+		System.out.println("");
+
+		long b = file.size();
+		long kb = b / 1024;
+		long mb = kb / 1024;
+		long gb = mb / 1024;
+		System.out.println("FILE SIZE: " + b + " b");
+		System.out.println("FILE SIZE: " + kb + " kb");
+		System.out.println("FILE SIZE: " + mb + " mb");
+		System.out.println("FILE SIZE: " + gb + " gb");
+
 	}
 
 }
