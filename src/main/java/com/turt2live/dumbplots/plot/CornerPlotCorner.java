@@ -1,5 +1,6 @@
 package com.turt2live.dumbplots.plot;
 
+
 public class CornerPlotCorner {
 
 	private CornerType type;

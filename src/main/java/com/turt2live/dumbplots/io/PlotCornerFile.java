@@ -107,6 +107,9 @@ public class PlotCornerFile {
 			this.mode = mode;
 			switch (mode) {
 			case OPEN:
+				if (!file.exists()) {
+					file.createNewFile();
+				}
 				in = new FileInputStream(file);
 				channel = in.getChannel();
 				break;

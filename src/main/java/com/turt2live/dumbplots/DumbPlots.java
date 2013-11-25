@@ -1,5 +1,6 @@
 package com.turt2live.dumbplots;
 
+import java.io.File;
 import java.util.List;
 
 import org.bukkit.ChatColor;
@@ -92,6 +93,14 @@ public class DumbPlots extends PluginWrapper implements Listener {
 		plots = null;
 		instance = null;
 		getLogger().info("Disabled! Plugin by turt2live");
+	}
+
+	public static File getCornerPath() {
+		File path = new File(getInstance().getDataFolder(), "plot_corners");
+		if (!path.exists()) {
+			path.mkdirs();
+		}
+		return path;
 	}
 
 	public PlotManager getPlotManager() {

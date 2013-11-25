@@ -1,12 +1,7 @@
 package com.turt2live.dumbplots.plot;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.turt2live.dumbplots.DumbPlots;
-import com.turt2live.dumbplots.io.FileMode;
-import com.turt2live.dumbplots.io.PlotCornerFile;
 
 public class PlotCorner {
 
@@ -20,15 +15,6 @@ public class PlotCorner {
 		cx = chunkX;
 		cz = chunkZ;
 		this.world = world;
-
-		DumbPlots plugin = DumbPlots.getInstance();
-		File path = new File(plugin.getDataFolder(), "plot_corners");
-		if (!path.exists()) {
-			path.mkdirs();
-		}
-
-		PlotCornerFile file = new PlotCornerFile((int) Math.floor(chunkX / DumbPlots.CHUNKS_PER_CORNER_FILE), (int) Math.floor(chunkZ / DumbPlots.CHUNKS_PER_CORNER_FILE), world, path, DumbPlots.CHUNKS_PER_CORNER_FILE);
-		file.open(FileMode.OPEN);
 	}
 
 	public String getOwner(CornerType corner) {
@@ -40,7 +26,7 @@ public class PlotCorner {
 	}
 
 	public long getId(CornerType corner) {
-		return ids.get(corner);
+		return ids.containsKey(corner) ? ids.get(corner) : 0;
 	}
 
 	public void setId(long id, CornerType corner) {
