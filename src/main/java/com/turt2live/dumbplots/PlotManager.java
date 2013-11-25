@@ -81,13 +81,26 @@ public class PlotManager {
 	}
 
 	public Plot getDefaultPlot(OfflinePlayer player) {
-		// TODO Auto-generated method stub
+		List<Plot> plots = getOwnedPlots(player);
+		if (plots != null && plots.size() > 0) {
+			return plots.get(0);
+		}
 		return null;
 	}
 
 	public Plot getPlot(String string) {
-		// TODO Auto-generated method stub
+		for(Plot plot : plots) {
+			if (plot.getName().equalsIgnoreCase(string)) {
+				return plot;
+			}
+		}
 		return null;
+	}
+
+	public void save() {
+		for(Plot plot : plots) {
+			plot.save();
+		}
 	}
 
 }

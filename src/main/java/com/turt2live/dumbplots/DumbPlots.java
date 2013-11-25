@@ -87,6 +87,7 @@ public class DumbPlots extends PluginWrapper implements Listener {
 	public void onDisable() {
 		getServer().getScheduler().cancelTasks(this);
 		commands.saveDebugModePlayers();
+		plots.save();
 		commands = null;
 		plots = null;
 		instance = null;
