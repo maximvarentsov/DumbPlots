@@ -80,4 +80,9 @@ public class PlotManager {
 		return Collections.unmodifiableList(plots);
 	}
 
+	public Plot getDefaultPlot(OfflinePlayer player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

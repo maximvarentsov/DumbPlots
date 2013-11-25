@@ -54,7 +54,6 @@ public class PlotsCommands implements CommandExecutor {
 	public boolean onCommand(final CommandSender sender, Command command, String label, String[] args) {
 		if (command.getName().equalsIgnoreCase("plot")) {
 			Plot plot = null;
-			// TODO: NPE on null plot for some commands
 			if (sender instanceof Player) {
 				plot = DumbUtil.getPlot(((Player) sender).getLocation());
 			}
@@ -102,14 +101,18 @@ public class PlotsCommands implements CommandExecutor {
 				} else if (args[0].equalsIgnoreCase("claim")) {
 					if (sender.hasPermission(Permission.CLAIM)) {
 						if (sender instanceof Player) {
-							Player player = (Player) sender;
-							if (plot.getPlotType() == PlotType.CLAIMED) {
-								plugin.sendMessage(sender, ChatColor.RED + "That plot is already claimed by " + (plot.getOwner().equals(player.getName()) ? "you" : plot.getOwner()));
+							if (plot != null) {
+								Player player = (Player) sender;
+								if (plot.getPlotType() == PlotType.CLAIMED) {
+									plugin.sendMessage(sender, ChatColor.RED + "That plot is already claimed by " + (plot.getOwner().equals(player.getName()) ? "you" : plot.getOwner()));
+								} else {
+									plot.setOwner(player.getName());
+									plot.setID(plugin.getPlotManager().getPlotID(player));
+									plot.setPlotType(PlotType.CLAIMED);
+									plugin.sendMessage(sender, ChatColor.GREEN + "Welcome to your new plot! " + ChatColor.GRAY + "(Plot ID = " + plot.getID() + ")");
+								}
 							} else {
-								plot.setOwner(player.getName());
-								plot.setID(plugin.getPlotManager().getPlotID(player));
-								plot.setPlotType(PlotType.CLAIMED);
-								plugin.sendMessage(sender, ChatColor.GREEN + "Welcome to your new plot! " + ChatColor.GRAY + "(Plot ID = " + plot.getID() + ")");
+								plugin.sendMessage(sender, ChatColor.RED + "That's not a plot!");
 							}
 						} else {
 							mustBePlayer(sender);
@@ -166,6 +169,7 @@ public class PlotsCommands implements CommandExecutor {
 									int px = 0, pz = 0, ring = 0;
 									while(!plotFound) {
 										int tx = (ring * 2) + 1;
+										// TODO wat
 										for(int i = -tx; i <= tx; i++) {
 											px = i;
 											pz = ring;
@@ -234,12 +238,12 @@ public class PlotsCommands implements CommandExecutor {
 							boolean doCheck = true;
 							if (args.length > 2) {
 								plot = plugin.getPlotManager().getPlot(args[2]);
-								if (plot == null) {
-									plugin.sendMessage(sender, ChatColor.RED + "Plot not found. Check the ID?");
-									doCheck = false;
-								}
 							}
-							if (args.length < 3 && !(sender instanceof Player)) {
+							if (plot == null) {
+								plugin.sendMessage(sender, ChatColor.RED + "Plot not found. Check the ID?");
+								doCheck = false;
+							}
+							if (doCheck && args.length < 3 && !(sender instanceof Player)) {
 								doCheck = false;
 								mustBePlayer(sender);
 							}
@@ -272,12 +276,12 @@ public class PlotsCommands implements CommandExecutor {
 							boolean doCheck = true;
 							if (args.length > 2) {
 								plot = plugin.getPlotManager().getPlot(args[2]);
-								if (plot == null) {
-									plugin.sendMessage(sender, ChatColor.RED + "Plot not found. Check the ID?");
-									doCheck = false;
-								}
 							}
-							if (args.length < 3 && !(sender instanceof Player)) {
+							if (plot == null) {
+								plugin.sendMessage(sender, ChatColor.RED + "Plot not found. Check the ID?");
+								doCheck = false;
+							}
+							if (doCheck && args.length < 3 && !(sender instanceof Player)) {
 								doCheck = false;
 								mustBePlayer(sender);
 							}
@@ -310,29 +314,29 @@ public class PlotsCommands implements CommandExecutor {
 							Player player = (Player) sender;
 							if (args.length > 1) {
 								plot = plugin.getPlotManager().getPlot(args[1]);
-								if (plot == null) {
-									plugin.sendMessage(sender, ChatColor.RED + "Plot not found. Check the ID?");
-								} else {
-									ChunkLoc a = null;
-									for(CornerPlotCorner corner : plot.getCorners()) {
-										if (corner.getType() == CornerType.A) {
-											a = corner.getLocation();
-											break;
-										}
-									}
-									if (a == null) {
-										plugin.sendMessage(sender, ChatColor.RED + "Critical error: Corner A does not exist. Contact the developer.");
-									} else {
-										Chunk chunk = a.getChunk(plot.getWorld());
-										int x = (chunk.getX() * 16) + 7;
-										int z = (chunk.getZ() * 16) + 7;
-										Location location = new Location(plot.getWorld(), x, chunk.getWorld().getHighestBlockYAt(x, z), z);
-										location.setYaw(135f);
-										player.teleport(location);
+							} else {
+								plot = plugin.getPlotManager().getDefaultPlot(player);
+							}
+							if (plot == null) {
+								plugin.sendMessage(sender, ChatColor.RED + "Plot not found. Check the ID?");
+							} else {
+								ChunkLoc a = null;
+								for(CornerPlotCorner corner : plot.getCorners()) {
+									if (corner.getType() == CornerType.A) {
+										a = corner.getLocation();
+										break;
 									}
 								}
-							} else {
-								plugin.sendMessage(sender, ChatColor.RED + "Incorrect syntax! Try " + ChatColor.YELLOW + "/plot tp <plot id>");
+								if (a == null) {
+									plugin.sendMessage(sender, ChatColor.RED + "Critical error: Corner A does not exist. Contact the developer.");
+								} else {
+									Chunk chunk = a.getChunk(plot.getWorld());
+									int x = (chunk.getX() * 16) + 7;
+									int z = (chunk.getZ() * 16) + 7;
+									Location location = new Location(plot.getWorld(), x, chunk.getWorld().getHighestBlockYAt(x, z), z);
+									location.setYaw(135f);
+									player.teleport(location);
+								}
 							}
 						} else {
 							mustBePlayer(sender);
@@ -345,11 +349,12 @@ public class PlotsCommands implements CommandExecutor {
 						boolean doCheck = true;
 						if (args.length > 1) {
 							plot = plugin.getPlotManager().getPlot(args[1]);
-							if (plot == null) {
-								plugin.sendMessage(sender, ChatColor.RED + "Plot not found. Check the ID?");
-							}
 						}
-						if (args.length < 2 && !(sender instanceof Player)) {
+						if (plot == null) {
+							plugin.sendMessage(sender, ChatColor.RED + "Plot not found. Check the ID?");
+							doCheck = false;
+						}
+						if (doCheck && args.length < 2 && !(sender instanceof Player)) {
 							mustBePlayer(sender);
 							doCheck = false;
 						}
