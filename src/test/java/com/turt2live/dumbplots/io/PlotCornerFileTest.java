@@ -163,10 +163,12 @@ public class PlotCornerFileTest {
 				long startTime = System.nanoTime();
 				file.writeCorner(corner);
 				long writeTime = System.nanoTime() - startTime;
-				if (writeTime < minWrite)
+				if (writeTime < minWrite) {
 					minWrite = writeTime;
-				if (writeTime > maxWrite)
+				}
+				if (writeTime > maxWrite) {
 					maxWrite = writeTime;
+				}
 				totalWrite += writeTime;
 				iterations++;
 			}
@@ -177,10 +179,12 @@ public class PlotCornerFileTest {
 				long startTime = System.nanoTime();
 				PlotCorner corner = file.getCorner(x, z, world);
 				long readTime = System.nanoTime() - startTime;
-				if (readTime < minRead)
+				if (readTime < minRead) {
 					minRead = readTime;
-				if (readTime > maxRead)
+				}
+				if (readTime > maxRead) {
 					maxRead = readTime;
+				}
 				totalRead += readTime;
 
 				for(CornerType c : CornerType.values()) {

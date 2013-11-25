@@ -182,14 +182,16 @@ public class Plot {
 		state = config.getBoolean("claimed", false) ? PlotType.CLAIMED : PlotType.UNCLAIMED;
 		// Load corners and chunks
 		List<String> ccorners = config.getStringList("corners");
-		if (ccorners == null)
+		if (ccorners == null) {
 			ccorners = new ArrayList<String>();
+		}
 		for(String corner : ccorners) {
 			corners.add(new CornerPlotCorner(corner, getWorld().getName()));
 		}
 		List<String> cchunks = config.getStringList("chunks");
-		if (cchunks == null)
+		if (cchunks == null) {
 			cchunks = new ArrayList<String>();
+		}
 		for(String chunk : cchunks) {
 			ChunkLoc loc = new ChunkLoc(chunk);
 			chunks.add(loc);

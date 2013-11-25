@@ -94,10 +94,12 @@ public class PlotCornerFile {
 
 	public void close() {
 		try {
-			if (in != null)
+			if (in != null) {
 				in.close();
-			if (out != null)
+			}
+			if (out != null) {
 				out.close();
+			}
 		} catch(IOException e) {} // Consume error
 	}
 
