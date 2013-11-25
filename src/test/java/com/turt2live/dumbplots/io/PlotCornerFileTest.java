@@ -37,11 +37,11 @@ public class PlotCornerFileTest {
 		corner2 = new PlotCorner(2, 8, world);
 		corner3 = new PlotCorner(8, 10, world);
 		largeCorner = new PlotCorner(0, 0, world);
-		largeCorner.setCorner(Long.MAX_VALUE, CornerType.A);
-		largeCorner.setCorner(Long.MAX_VALUE - 1, CornerType.B);
-		largeCorner.setCorner(Long.MAX_VALUE / 2, CornerType.C);
-		largeCorner.setCorner(Long.MAX_VALUE - (Long.MAX_VALUE / 5), CornerType.D);
-		largeCorner.setCorner(Long.MIN_VALUE, CornerType.UNKNOWN);
+		largeCorner.setId(Long.MAX_VALUE, CornerType.A);
+		largeCorner.setId(Long.MAX_VALUE - 1, CornerType.B);
+		largeCorner.setId(Long.MAX_VALUE / 2, CornerType.C);
+		largeCorner.setId(Long.MAX_VALUE - (Long.MAX_VALUE / 5), CornerType.D);
+		largeCorner.setId(Long.MIN_VALUE, CornerType.UNKNOWN);
 
 		// Wipe the file
 		PlotCornerFile file = new PlotCornerFile(rx, ry, world, testFilePath, maxWidth);
@@ -74,12 +74,12 @@ public class PlotCornerFileTest {
 
 		// Check corners
 		for(CornerType corner : CornerType.values()) {
-			assertEquals(corner1.getInternalId(corner), cornerA.getInternalId(corner));
-			assertEquals(corner2.getInternalId(corner), cornerB.getInternalId(corner));
-			assertEquals(corner3.getInternalId(corner), cornerC.getInternalId(corner));
+			assertEquals(corner1.getId(corner), cornerA.getId(corner));
+			assertEquals(corner2.getId(corner), cornerB.getId(corner));
+			assertEquals(corner3.getId(corner), cornerC.getId(corner));
 
 			// Check for null/0
-			assertEquals(0, cornerD.getInternalId(corner));
+			assertEquals(0, cornerD.getId(corner));
 		}
 		file.close();
 	}
@@ -104,12 +104,12 @@ public class PlotCornerFileTest {
 
 		// Check corners
 		for(CornerType corner : CornerType.values()) {
-			assertEquals(corner1.getInternalId(corner), cornerA.getInternalId(corner));
+			assertEquals(corner1.getId(corner), cornerA.getId(corner));
 
 			// Check for null/0
-			assertEquals(0, cornerB.getInternalId(corner));
-			assertEquals(0, cornerC.getInternalId(corner));
-			assertEquals(0, cornerD.getInternalId(corner));
+			assertEquals(0, cornerB.getId(corner));
+			assertEquals(0, cornerC.getId(corner));
+			assertEquals(0, cornerD.getId(corner));
 		}
 		file.close();
 	}
@@ -132,12 +132,12 @@ public class PlotCornerFileTest {
 
 		// Check corners
 		for(CornerType corner : CornerType.values()) {
-			assertEquals(corner1.getInternalId(corner), cornerA.getInternalId(corner));
+			assertEquals(corner1.getId(corner), cornerA.getId(corner));
 
 			// Check for null/0
-			assertEquals(0, cornerB.getInternalId(corner));
-			assertEquals(0, cornerC.getInternalId(corner));
-			assertEquals(0, cornerD.getInternalId(corner));
+			assertEquals(0, cornerB.getId(corner));
+			assertEquals(0, cornerC.getId(corner));
+			assertEquals(0, cornerD.getId(corner));
 		}
 	}
 
@@ -158,7 +158,7 @@ public class PlotCornerFileTest {
 			for(int z = 0; z < maxWidth; z++) {
 				PlotCorner corner = new PlotCorner(x, z, world);
 				for(CornerType c : CornerType.values()) {
-					corner.setCorner(largeCorner.getInternalId(c), c);
+					corner.setId(largeCorner.getId(c), c);
 				}
 				long startTime = System.nanoTime();
 				file.writeCorner(corner);
@@ -184,7 +184,7 @@ public class PlotCornerFileTest {
 				totalRead += readTime;
 
 				for(CornerType c : CornerType.values()) {
-					assertEquals(largeCorner.getInternalId(c), corner.getInternalId(c));
+					assertEquals(largeCorner.getId(c), corner.getId(c));
 				}
 			}
 		}

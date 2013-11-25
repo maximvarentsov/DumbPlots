@@ -13,6 +13,7 @@ import com.turt2live.dumbplots.plot.PlotCorner;
 
 public class ResetPlot {
 
+	// TODO: wat
 	public static void reset(Plot plot) {
 		for(ChunkLoc chunkl : plot.getChunks()) {
 			ChunkType ctype = DumbUtil.getChunkType(chunkl);
@@ -35,7 +36,7 @@ public class ResetPlot {
 				PlotCorner plotCorner = new PlotCorner(chunkl.getX(), cz, plot.getWorld().getName());
 				CornerType corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
-					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getName())) {
+					if (plotCorner.getId(c) > 0 && plotCorner.getId(c) == plot.getId()) {
 						corner = c;
 						break;
 					}
@@ -56,7 +57,7 @@ public class ResetPlot {
 				plotCorner = new PlotCorner(cx, chunkl.getZ(), plot.getWorld().getName());
 				corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
-					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getName())) {
+					if (plotCorner.getId(c) > 0 && plotCorner.getId(c) == plot.getId()) {
 						corner = c;
 						break;
 					}
@@ -68,7 +69,7 @@ public class ResetPlot {
 				plotCorner = new PlotCorner(chunkl.getX(), chunkl.getZ(), plot.getWorld().getName());
 				corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
-					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getName())) {
+					if (plotCorner.getId(c) > 0 && plotCorner.getId(c) == plot.getId()) {
 						corner = c;
 						break;
 					}

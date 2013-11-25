@@ -119,7 +119,7 @@ public class DebugListener implements Listener {
 				if (type == ChunkType.CORNER) {
 					PlotCorner corner = new PlotCorner(block.getChunk().getX(), block.getChunk().getZ(), block.getWorld().getName());
 					for(CornerType ct : CornerType.values()) {
-						player.sendMessage(ct.name() + " is owned by " + corner.getOwner(ct) + ". PID = " + corner.getID(ct));
+						player.sendMessage(ct.name() + " is owned by " + corner.getOwner(ct) + ". PID = " + corner.getId(ct));
 					}
 				} else {
 					player.sendMessage("Not a corner");

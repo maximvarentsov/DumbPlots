@@ -310,6 +310,7 @@ public class Plot {
 		for(CornerPlotCorner corner : getCorners()) {
 			corner.getCorner().setName(getName(), corner.getType());
 			corner.getCorner().setOwner(getOwner(), corner.getType());
+			corner.getCorner().setId(getId(), corner.getType());
 		}
 	}
 

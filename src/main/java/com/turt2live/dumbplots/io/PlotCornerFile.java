@@ -48,7 +48,7 @@ public class PlotCornerFile {
 		buffer.put(HEADER_BYTE);
 		for(CornerType c : CornerType.values()) {
 			buffer.put(c.data);
-			buffer.putLong(corner.getInternalId(c));
+			buffer.putLong(corner.getId(c));
 		}
 		buffer.put(FOOTER_BYTE);
 		buffer.flip();
@@ -74,7 +74,7 @@ public class PlotCornerFile {
 				for(int i = 0; i < CornerType.values().length; i++) {
 					byte cornerId = buffer.get();
 					long id = buffer.getLong();
-					corner.setCorner(id, CornerType.fromByte(cornerId));
+					corner.setId(id, CornerType.fromByte(cornerId));
 				}
 				byte tail = buffer.get();
 				if (tail != FOOTER_BYTE) {

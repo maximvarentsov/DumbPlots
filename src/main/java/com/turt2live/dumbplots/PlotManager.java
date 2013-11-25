@@ -48,9 +48,9 @@ public class PlotManager {
 		return plugin.getConfig().getStringList("worlds").contains(world.getName());
 	}
 
-	public Plot getPlot(String id) {
+	public Plot getPlot(long id) {
 		for(Plot plot : plots) {
-			if (plot.getName().equals(id)) {
+			if (plot.getId() == id) {
 				return plot;
 			}
 		}
@@ -81,6 +81,11 @@ public class PlotManager {
 	}
 
 	public Plot getDefaultPlot(OfflinePlayer player) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Plot getPlot(String string) {
 		// TODO Auto-generated method stub
 		return null;
 	}
