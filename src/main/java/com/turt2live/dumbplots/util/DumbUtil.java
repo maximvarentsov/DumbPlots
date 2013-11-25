@@ -454,7 +454,8 @@ public class DumbUtil {
 	}
 
 	public static long nextId() {
-		return 0;
+		return 0; // TODO
+		// 0 is console
 	}
 
 }
