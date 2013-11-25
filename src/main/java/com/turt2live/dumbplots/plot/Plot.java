@@ -176,6 +176,10 @@ public class Plot {
 		DumbPlots plugin = DumbPlots.getInstance();
 		EnhancedConfiguration config = new EnhancedConfiguration(file, plugin);
 		config.load();
+		name = config.getString("plot-name", "UNCLAIMED");
+		owner = config.getString("owner", "CONSOLE");
+		world = config.getString("world", "world");
+		state = config.getBoolean("claimed", false) ? PlotType.CLAIMED : PlotType.UNCLAIMED;
 		// Load corners and chunks
 		List<String> ccorners = config.getStringList("corners");
 		if (ccorners == null)
@@ -190,10 +194,6 @@ public class Plot {
 			ChunkLoc loc = new ChunkLoc(chunk);
 			chunks.add(loc);
 		}
-		name = config.getString("plot-name", "UNCLAIMED");
-		owner = config.getString("owner", "CONSOLE");
-		world = config.getString("world", "world");
-		state = config.getBoolean("claimed", false) ? PlotType.CLAIMED : PlotType.UNCLAIMED;
 		this.sysId = config.getLong("id", 0);
 	}
 
