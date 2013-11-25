@@ -49,34 +49,24 @@ public class TerrainGenerator extends ChunkGenerator {
 		byte[][] result = new byte[16][];
 		int x, y, z;
 
-		// Set biomes
+		//Sets the layers
 		for(x = 0; x < 16; x++) {
 			for(z = 0; z < 16; z++) {
+				// Set biome
 				biomeGrid.setBiome(x, z, Biome.FOREST);
-			}
-		}
 
-		//Sets bedrock layer
-		for(x = 0; x < 16; x++) {
-			for(z = 0; z < 16; z++) {
+				// Set bedrock
 				setBlock(result, x, 0, z, (byte) Material.BEDROCK.getId());
-			}
-		}
 
-		//Sets the dirt layers
-		for(x = 0; x < 16; x++) {
-			for(y = 1; y < height - 1; y++) {
-				for(z = 0; z < 16; z++) {
+				// Set dirt
+				for(y = 1; y < height - 1; y++) {
 					setBlock(result, x, y, z, (byte) Material.DIRT.getId());
 				}
-			}
-		}
 
-		// Set surface
-		switch (DumbUtil.getChunkType(chunkX, chunkZ)) {
-		case CORNER:
-			for(x = 0; x < 16; x++) {
-				for(z = 0; z < 16; z++) {
+				// Set surface
+				ChunkType ctype = DumbUtil.getChunkType(chunkX, chunkZ);
+				switch (ctype) {
+				case CORNER:
 					if ((x > 4 && x < 11 && z > 4 && z < 11) // Fills center
 							|| (x < 5 && z < 11 && z > 4) // Fill X-Direction
 							|| (x > 8 && z < 11 && z > 4)
@@ -93,57 +83,23 @@ public class TerrainGenerator extends ChunkGenerator {
 					} else {
 						setBlock(result, x, height - 1, z, (byte) Material.GRASS.getId());
 					}
-				}
-			}
-			break;
-		case LINEAR_X:
-			for(x = 0; x < 16; x++) {
-				for(z = 0; z < 16; z++) {
-					if (x > 11 || x < 4) {
+					break;
+				case LINEAR_X:
+				case LINEAR_Z:
+					int v = ctype == ChunkType.LINEAR_X ? x : z;
+					if (v > 11 || v < 4) {
 						setBlock(result, x, height - 1, z, (byte) Material.GRASS.getId());
-					} else if (x == 4 || x == 11) {
-						if ((z == 8 || z == 7) && DumbUtil.getChunkType(chunkX, chunkZ - 1) == ChunkType.LINEAR_X && DumbUtil.getChunkType(chunkX, chunkZ + 1) == ChunkType.LINEAR_X) {
-							setBlock(result, x, height - 1, z, (byte) Material.GLOWSTONE.getId());
-							setBlock(result, x, height, z, (byte) Material.DIAMOND_BLOCK.getId());
-						} else {
-							setBlock(result, x, height - 1, z, (byte) Material.GLOWSTONE.getId());
-							setBlock(result, x, height, z, (byte) Material.FENCE.getId());
-						}
+					} else if (v == 4 || v == 11) {
+						setBlock(result, x, height - 1, z, (byte) Material.GLOWSTONE.getId());
+						setBlock(result, x, height, z, (byte) Material.FENCE.getId());
 					} else {
 						setBlock(result, x, height - 1, z, (byte) Material.SMOOTH_BRICK.getId());
 					}
-				}
-			}
-			break;
-		case LINEAR_Z:
-			for(x = 0; x < 16; x++) {
-				for(z = 0; z < 16; z++) {
-					if (z > 11 || z < 4) {
-						setBlock(result, x, height - 1, z, (byte) Material.GRASS.getId());
-					} else if (z == 4 || z == 11) {
-						if ((x == 8 || x == 7) && DumbUtil.getChunkType(chunkX - 1, chunkZ) == ChunkType.LINEAR_Z && DumbUtil.getChunkType(chunkX + 1, chunkZ) == ChunkType.LINEAR_Z) {
-							setBlock(result, x, height - 1, z, (byte) Material.GLOWSTONE.getId());
-							setBlock(result, x, height, z, (byte) Material.GOLD_BLOCK.getId());
-						} else {
-							setBlock(result, x, height - 1, z, (byte) Material.GLOWSTONE.getId());
-							setBlock(result, x, height, z, (byte) Material.FENCE.getId());
-						}
-					} else {
-						setBlock(result, x, height - 1, z, (byte) Material.SMOOTH_BRICK.getId());
-					}
-				}
-			}
-			break;
-		case FLAT:
-			for(x = 0; x < 16; x++) {
-				for(z = 0; z < 16; z++) {
+					break;
+				case FLAT:
 					setBlock(result, x, height - 1, z, (byte) Material.GRASS.getId());
-				}
-			}
-			break;
-		default: // OH NOES case
-			for(x = 0; x < 16; x++) {
-				for(z = 0; z < 16; z++) {
+					break;
+				default: // OH NOES case
 					setBlock(result, x, height - 1, z, (byte) Material.LEAVES.getId());
 				}
 			}
@@ -154,7 +110,7 @@ public class TerrainGenerator extends ChunkGenerator {
 	@Override
 	public List<BlockPopulator> getDefaultPopulators(World world) {
 		List<BlockPopulator> pops = new ArrayList<BlockPopulator>();
-		pops.add(new TerrainPopulator(height - 1));
+		//pops.add(new TerrainPopulator(height - 1));
 		return pops;
 	}
 

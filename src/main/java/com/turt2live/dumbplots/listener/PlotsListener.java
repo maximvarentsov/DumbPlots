@@ -14,7 +14,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
-import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.event.block.BlockFromToEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
@@ -421,11 +420,6 @@ public class PlotsListener implements Listener {
 				event.setCancelled(true);
 			}
 		}
-	}
-
-	@EventHandler (priority = EventPriority.HIGHEST, ignoreCancelled = true)
-	public void onDispense(BlockDispenseEvent event) {
-		// TODO ?
 	}
 
 	private boolean isAllowed(Location location, Player player) {

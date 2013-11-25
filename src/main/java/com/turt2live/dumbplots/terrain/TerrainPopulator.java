@@ -10,6 +10,8 @@ import org.bukkit.generator.BlockPopulator;
 
 public class TerrainPopulator extends BlockPopulator {
 
+	// UNUSED (for now?)
+
 	private int scanH = 16;
 
 	public TerrainPopulator(int scanH) {
