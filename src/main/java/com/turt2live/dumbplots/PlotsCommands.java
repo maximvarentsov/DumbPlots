@@ -21,10 +21,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import com.turt2live.dumbplots.plot.ChunkLoc;
-import com.turt2live.dumbplots.plot.CornerPlotCorner;
-import com.turt2live.dumbplots.plot.CornerType;
 import com.turt2live.dumbplots.plot.Plot;
 import com.turt2live.dumbplots.plot.Plot.PlotType;
+import com.turt2live.dumbplots.plot.corner.CornerPlotCorner;
+import com.turt2live.dumbplots.plot.corner.CornerType;
 import com.turt2live.dumbplots.util.DumbUtil;
 import com.turt2live.dumbplots.util.ResetPlot;
 

@@ -13,11 +13,11 @@ import org.bukkit.entity.EntityType;
 import com.turt2live.dumbplots.DumbPlots;
 import com.turt2live.dumbplots.plot.ChunkLoc;
 import com.turt2live.dumbplots.plot.ChunkType;
-import com.turt2live.dumbplots.plot.CornerType;
 import com.turt2live.dumbplots.plot.LinearSide;
 import com.turt2live.dumbplots.plot.Plot;
 import com.turt2live.dumbplots.plot.Plot.PlotType;
-import com.turt2live.dumbplots.plot.PlotCorner;
+import com.turt2live.dumbplots.plot.corner.CornerType;
+import com.turt2live.dumbplots.plot.corner.PlotCorner;
 
 public class DumbUtil {
 
@@ -246,7 +246,7 @@ public class DumbUtil {
 			}
 			// Try to identify the plot by the corner
 			CornerType corner = CornerType.getCornerType(newLocation);
-			PlotCorner pcorner = new PlotCorner(chunkX, chunkZ, location.getWorld().getName());
+			PlotCorner pcorner = DumbPlots.getInstance().getCornerManager().getCorner(chunkX, chunkZ, location.getWorld().getName());
 			long id = pcorner.getId(corner);
 			if (id > 0) {
 				return DumbPlots.getInstance().getPlotManager().getPlot(id);

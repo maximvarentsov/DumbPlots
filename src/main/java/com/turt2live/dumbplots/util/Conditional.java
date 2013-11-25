@@ -1,7 +1,7 @@
 package com.turt2live.dumbplots.util;
 
-import com.turt2live.dumbplots.plot.CornerType;
 import com.turt2live.dumbplots.plot.LinearSide;
+import com.turt2live.dumbplots.plot.corner.CornerType;
 
 public class Conditional {
 

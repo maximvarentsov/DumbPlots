@@ -4,12 +4,13 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
+import com.turt2live.dumbplots.DumbPlots;
 import com.turt2live.dumbplots.plot.ChunkLoc;
 import com.turt2live.dumbplots.plot.ChunkType;
-import com.turt2live.dumbplots.plot.CornerType;
 import com.turt2live.dumbplots.plot.LinearSide;
 import com.turt2live.dumbplots.plot.Plot;
-import com.turt2live.dumbplots.plot.PlotCorner;
+import com.turt2live.dumbplots.plot.corner.CornerType;
+import com.turt2live.dumbplots.plot.corner.PlotCorner;
 
 public class ResetPlot {
 
@@ -19,6 +20,7 @@ public class ResetPlot {
 			ChunkType ctype = DumbUtil.getChunkType(chunkl);
 			Chunk chunk = chunkl.getChunk(plot.getWorld());
 			Conditional condition = null;
+			DumbPlots plugin = DumbPlots.getInstance();
 			switch (ctype) {
 			case FLAT:
 				condition = Conditional.NO_CONDITION;
@@ -33,7 +35,7 @@ public class ResetPlot {
 						break;
 					}
 				}
-				PlotCorner plotCorner = new PlotCorner(chunkl.getX(), cz, plot.getWorld().getName());
+				PlotCorner plotCorner = plugin.getCornerManager().getCorner(chunkl.getX(), cz, plot.getWorld().getName());
 				CornerType corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
 					if (plotCorner.getId(c) > 0 && plotCorner.getId(c) == plot.getId()) {
@@ -54,7 +56,7 @@ public class ResetPlot {
 						break;
 					}
 				}
-				plotCorner = new PlotCorner(cx, chunkl.getZ(), plot.getWorld().getName());
+				plotCorner = plugin.getCornerManager().getCorner(cx, chunkl.getZ(), plot.getWorld().getName());
 				corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
 					if (plotCorner.getId(c) > 0 && plotCorner.getId(c) == plot.getId()) {
@@ -66,7 +68,7 @@ public class ResetPlot {
 				condition = new Conditional(side);
 				break;
 			case CORNER:
-				plotCorner = new PlotCorner(chunkl.getX(), chunkl.getZ(), plot.getWorld().getName());
+				plotCorner = plugin.getCornerManager().getCorner(chunkl.getX(), chunkl.getZ(), plot.getWorld().getName());
 				corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
 					if (plotCorner.getId(c) > 0 && plotCorner.getId(c) == plot.getId()) {

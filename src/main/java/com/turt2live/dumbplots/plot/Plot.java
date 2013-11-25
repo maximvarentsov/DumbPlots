@@ -12,6 +12,7 @@ import org.bukkit.World;
 
 import com.feildmaster.lib.configuration.EnhancedConfiguration;
 import com.turt2live.dumbplots.DumbPlots;
+import com.turt2live.dumbplots.plot.corner.CornerPlotCorner;
 import com.turt2live.dumbplots.util.DumbUtil;
 
 public class Plot {

@@ -16,6 +16,7 @@ import com.feildmaster.lib.configuration.PluginWrapper;
 import com.turt2live.dumbplots.listener.DebugListener;
 import com.turt2live.dumbplots.listener.EnvironmentListener;
 import com.turt2live.dumbplots.listener.PlotsListener;
+import com.turt2live.dumbplots.plot.corner.PlotCornerManager;
 import com.turt2live.dumbplots.terrain.TerrainGenerator;
 
 public class DumbPlots extends PluginWrapper implements Listener {
@@ -26,12 +27,9 @@ public class DumbPlots extends PluginWrapper implements Listener {
 	private static DumbPlots instance;
 	public static final int CHUNKS_PER_CORNER_FILE = 128;
 
-	public static DumbPlots getInstance() {
-		return instance;
-	}
-
 	private PlotManager plots;
 	private PlotsCommands commands;
+	private PlotCornerManager corners;
 
 	@Override
 	public void onEnable() {
@@ -45,6 +43,7 @@ public class DumbPlots extends PluginWrapper implements Listener {
 		getConfig().load();
 
 		// Setup manager
+		corners = new PlotCornerManager();
 		plots = new PlotManager();
 
 		// Commands setup
@@ -90,10 +89,16 @@ public class DumbPlots extends PluginWrapper implements Listener {
 		getServer().getScheduler().cancelTasks(this);
 		commands.saveDebugModePlayers();
 		plots.save();
+		corners.save();
 		commands = null;
 		plots = null;
+		corners = null;
 		instance = null;
 		getLogger().info("Disabled! Plugin by turt2live");
+	}
+
+	public static DumbPlots getInstance() {
+		return instance;
 	}
 
 	public static File getCornerPath() {
@@ -102,6 +107,10 @@ public class DumbPlots extends PluginWrapper implements Listener {
 			path.mkdirs();
 		}
 		return path;
+	}
+
+	public PlotCornerManager getCornerManager() {
+		return corners;
 	}
 
 	public PlotManager getPlotManager() {

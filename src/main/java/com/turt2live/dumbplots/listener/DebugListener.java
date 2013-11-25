@@ -12,10 +12,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 
 import com.turt2live.dumbplots.DumbPlots;
 import com.turt2live.dumbplots.plot.ChunkType;
-import com.turt2live.dumbplots.plot.CornerType;
 import com.turt2live.dumbplots.plot.LinearSide;
 import com.turt2live.dumbplots.plot.Plot;
-import com.turt2live.dumbplots.plot.PlotCorner;
+import com.turt2live.dumbplots.plot.corner.CornerType;
+import com.turt2live.dumbplots.plot.corner.PlotCorner;
 import com.turt2live.dumbplots.util.DumbUtil;
 import com.turt2live.dumbplots.util.ResetPlot;
 
@@ -117,7 +117,7 @@ public class DebugListener implements Listener {
 			if (block != null) {
 				ChunkType type = DumbUtil.getChunkType(block.getChunk().getX(), block.getChunk().getZ());
 				if (type == ChunkType.CORNER) {
-					PlotCorner corner = new PlotCorner(block.getChunk().getX(), block.getChunk().getZ(), block.getWorld().getName());
+					PlotCorner corner = plugin.getCornerManager().getCorner(block.getChunk().getX(), block.getChunk().getZ(), block.getWorld().getName());
 					for(CornerType ct : CornerType.values()) {
 						player.sendMessage(ct.name() + " is owned by " + corner.getOwner(ct) + ". PID = " + corner.getId(ct));
 					}
