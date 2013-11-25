@@ -453,4 +453,9 @@ public class DumbUtil {
 		return getPlot(location);
 	}
 
+	public static long nextId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

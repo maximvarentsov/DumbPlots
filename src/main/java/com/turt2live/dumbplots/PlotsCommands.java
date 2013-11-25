@@ -107,9 +107,9 @@ public class PlotsCommands implements CommandExecutor {
 									plugin.sendMessage(sender, ChatColor.RED + "That plot is already claimed by " + (plot.getOwner().equals(player.getName()) ? "you" : plot.getOwner()));
 								} else {
 									plot.setOwner(player.getName());
-									plot.setID(plugin.getPlotManager().getPlotID(player));
+									plot.setName(plugin.getPlotManager().getPlotID(player));
 									plot.setPlotType(PlotType.CLAIMED);
-									plugin.sendMessage(sender, ChatColor.GREEN + "Welcome to your new plot! " + ChatColor.GRAY + "(Plot ID = " + plot.getID() + ")");
+									plugin.sendMessage(sender, ChatColor.GREEN + "Welcome to your new plot! " + ChatColor.GRAY + "(Plot ID = " + plot.getName() + ")");
 								}
 							} else {
 								plugin.sendMessage(sender, ChatColor.RED + "That's not a plot!");
@@ -139,7 +139,7 @@ public class PlotsCommands implements CommandExecutor {
 								if (plot.getPlotType() == PlotType.CLAIMED) {
 									if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.BYPASS)) {
 										plot.setOwner("CONSOLE");
-										plot.setID(DumbUtil.generateUnclaimedID());
+										plot.setName(DumbUtil.generateUnclaimedID());
 										plot.setPlotType(PlotType.UNCLAIMED);
 										ResetPlot.reset(plot);
 										plugin.sendMessage(sender, ChatColor.GREEN + "Your plot has been unclaimed.");
@@ -202,7 +202,7 @@ public class PlotsCommands implements CommandExecutor {
 										}
 										ring++;
 									}
-									plot.setID(plugin.getPlotManager().getPlotID(player));
+									plot.setName(plugin.getPlotManager().getPlotID(player));
 									plot.setOwner(player.getName());
 									plot.setPlotType(PlotType.CLAIMED);
 									plot.assignCorners();
@@ -222,7 +222,7 @@ public class PlotsCommands implements CommandExecutor {
 										Location location = new Location(plot.getWorld(), x, chunk.getWorld().getHighestBlockYAt(x, z), z);
 										location.setYaw(135f);
 										player.teleport(location);
-										plugin.sendMessage(sender, ChatColor.GREEN + "Welcome to your new plot! " + ChatColor.GRAY + "(Plot ID = " + plot.getID() + ")");
+										plugin.sendMessage(sender, ChatColor.GREEN + "Welcome to your new plot! " + ChatColor.GRAY + "(Plot ID = " + plot.getName() + ")");
 									}
 								}
 							});
@@ -251,13 +251,13 @@ public class PlotsCommands implements CommandExecutor {
 								if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.BYPASS)) {
 									OfflinePlayer player = DumbUtil.getPlayer(args[1]);
 									if (plot.isAllowed(player)) {
-										plugin.sendMessage(sender, ChatColor.RED + player.getName() + " is already allowed to build in " + plot.getID());
+										plugin.sendMessage(sender, ChatColor.RED + player.getName() + " is already allowed to build in " + plot.getName());
 									} else {
-										plugin.sendMessage(sender, ChatColor.GREEN + player.getName() + " can now build in " + plot.getID());
+										plugin.sendMessage(sender, ChatColor.GREEN + player.getName() + " can now build in " + plot.getName());
 										plot.addAllowedMember(player);
 										if (player.isOnline()) {
 											Player pl = player.getPlayer();
-											plugin.sendMessage(pl, ChatColor.GREEN + "You can now build in " + plot.getID());
+											plugin.sendMessage(pl, ChatColor.GREEN + "You can now build in " + plot.getName());
 										}
 									}
 								} else {
@@ -289,13 +289,13 @@ public class PlotsCommands implements CommandExecutor {
 								if (plot.getOwner().equals(sender.getName()) || sender.hasPermission(Permission.BYPASS)) {
 									OfflinePlayer player = DumbUtil.getPlayer(args[1]);
 									if (!plot.isAllowed(player)) {
-										plugin.sendMessage(sender, ChatColor.RED + player.getName() + " is already no allowed to build in " + plot.getID());
+										plugin.sendMessage(sender, ChatColor.RED + player.getName() + " is already no allowed to build in " + plot.getName());
 									} else {
-										plugin.sendMessage(sender, ChatColor.GREEN + player.getName() + " can no longer build in " + plot.getID());
+										plugin.sendMessage(sender, ChatColor.GREEN + player.getName() + " can no longer build in " + plot.getName());
 										plot.removeAllowedMember(player);
 										if (player.isOnline()) {
 											Player pl = player.getPlayer();
-											plugin.sendMessage(pl, ChatColor.RED + "You can no longer build in " + plot.getID());
+											plugin.sendMessage(pl, ChatColor.RED + "You can no longer build in " + plot.getName());
 										}
 									}
 								} else {
@@ -374,7 +374,7 @@ public class PlotsCommands implements CommandExecutor {
 						if (args.length > 1) {
 							int deleted = 0;
 							for(Plot p : plugin.getPlotManager().getOwnedPlots(DumbUtil.getPlayer(args[1]))) {
-								p.setID(DumbUtil.generateUnclaimedID());
+								p.setName(DumbUtil.generateUnclaimedID());
 								p.setOwner("CONSOLE");
 								p.setPlotType(PlotType.UNCLAIMED);
 								ResetPlot.reset(p);

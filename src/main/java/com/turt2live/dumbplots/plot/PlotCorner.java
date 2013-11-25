@@ -46,7 +46,7 @@ public class PlotCorner {
 		ids.put(corner, id);
 	}
 
-	public void setID(String owner, CornerType corner) {
+	public void setName(String owner, CornerType corner) {
 		// TODO
 	}
 

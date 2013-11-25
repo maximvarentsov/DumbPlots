@@ -50,7 +50,7 @@ public class PlotManager {
 
 	public Plot getPlot(String id) {
 		for(Plot plot : plots) {
-			if (plot.getID().equals(id)) {
+			if (plot.getName().equals(id)) {
 				return plot;
 			}
 		}

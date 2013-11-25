@@ -100,7 +100,7 @@ public class PlotsListener implements Listener {
 			event.setCancelled(true);
 		} else if (p1 == null && p2 == null) {
 			// Same location, ignore
-		} else if (!p1.getID().equals(p2.getID())) {
+		} else if (!p1.getName().equals(p2.getName())) {
 			event.setCancelled(true);
 		}
 	}
@@ -122,7 +122,7 @@ public class PlotsListener implements Listener {
 				// Allow
 			} else if ((original != null && destination == null) || (original == null && destination != null)) {
 				event.setCancelled(true);
-			} else if (!original.getID().equals(destination.getID())) {
+			} else if (!original.getName().equals(destination.getName())) {
 				event.setCancelled(true);
 			}
 		}
@@ -143,7 +143,7 @@ public class PlotsListener implements Listener {
 			// Allow
 		} else if ((original != null && destination == null) || (original == null && destination != null)) {
 			event.setCancelled(true);
-		} else if (!original.getID().equals(destination.getID())) {
+		} else if (!original.getName().equals(destination.getName())) {
 			event.setCancelled(true);
 		}
 	}
@@ -163,7 +163,7 @@ public class PlotsListener implements Listener {
 			// Allow
 		} else if ((original != null && destination == null) || (original == null && destination != null)) {
 			event.setCancelled(true);
-		} else if (!original.getID().equals(destination.getID())) {
+		} else if (!original.getName().equals(destination.getName())) {
 			event.setCancelled(true);
 		}
 	}
@@ -182,7 +182,7 @@ public class PlotsListener implements Listener {
 			// Allow
 		} else if ((original != null && destination == null) || (original == null && destination != null)) {
 			event.setCancelled(true);
-		} else if (!original.getID().equals(destination.getID())) {
+		} else if (!original.getName().equals(destination.getName())) {
 			event.setCancelled(true);
 		}
 	}
@@ -255,7 +255,7 @@ public class PlotsListener implements Listener {
 			// Allow
 		} else if ((original != null && destination == null) || (original == null && destination != null)) {
 			event.getEntity().remove();
-		} else if (!original.getID().equals(destination.getID())) {
+		} else if (!original.getName().equals(destination.getName())) {
 			event.getEntity().remove();
 		}
 	}
@@ -280,7 +280,7 @@ public class PlotsListener implements Listener {
 						// Allow
 					} else if ((original != null && destination == null) || (original == null && destination != null)) {
 						event.setCancelled(true);
-					} else if (!original.getID().equals(destination.getID())) {
+					} else if (!original.getName().equals(destination.getName())) {
 						event.setCancelled(true);
 					}
 				}
@@ -303,7 +303,7 @@ public class PlotsListener implements Listener {
 			// Allow
 		} else if ((original != null && destination == null) || (original == null && destination != null)) {
 			event.setCancelled(true);
-		} else if (!original.getID().equals(destination.getID())) {
+		} else if (!original.getName().equals(destination.getName())) {
 			event.setCancelled(true);
 		}
 	}
@@ -323,7 +323,7 @@ public class PlotsListener implements Listener {
 			// Allow
 		} else if ((original != null && destination == null) || (original == null && destination != null)) {
 			event.setCancelled(true);
-		} else if (!original.getID().equals(destination.getID())) {
+		} else if (!original.getName().equals(destination.getName())) {
 			event.setCancelled(true);
 		}
 	}
@@ -342,7 +342,7 @@ public class PlotsListener implements Listener {
 				// Allow
 			} else if ((original != null && destination == null) || (original == null && destination != null)) {
 				event.getBlocks().remove(i--);
-			} else if (!original.getID().equals(destination.getID())) {
+			} else if (!original.getName().equals(destination.getName())) {
 				event.getBlocks().remove(i--);
 			}
 		}
@@ -372,7 +372,7 @@ public class PlotsListener implements Listener {
 		} else if ((original != null && destination == null) || (original == null && destination != null)) {
 			event.setExperience(0);
 			event.setShowEffect(false);
-		} else if (!original.getID().equals(destination.getID())) {
+		} else if (!original.getName().equals(destination.getName())) {
 			event.setExperience(0);
 			event.setShowEffect(false);
 		}
@@ -392,7 +392,7 @@ public class PlotsListener implements Listener {
 				// Allow
 			} else if ((original != null && destination == null) || (original == null && destination != null)) {
 				event.blockList().remove(i--);
-			} else if (!original.getID().equals(destination.getID())) {
+			} else if (!original.getName().equals(destination.getName())) {
 				event.blockList().remove(i--);
 			}
 		}

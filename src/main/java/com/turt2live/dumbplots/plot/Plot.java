@@ -25,6 +25,7 @@ public class Plot {
 		if (DumbUtil.isPlotPath(location)) {
 			return null;
 		}
+		long id = DumbUtil.nextId();
 		String plotid = DumbUtil.generateUnclaimedID();
 		List<String> corners = new ArrayList<String>();
 		List<String> chunks = new ArrayList<String>();
@@ -37,6 +38,7 @@ public class Plot {
 		Location newLocation = location.clone();
 		Location startLocation = location.clone(); // Used in correction values
 		int c = 0;
+		// TODO: wat
 		switch (initType) {
 		case CORNER:
 			abcdCorners = DumbUtil.findCorners(location, chunkX, chunkZ);
@@ -149,7 +151,8 @@ public class Plot {
 		EnhancedConfiguration config = new EnhancedConfiguration(file, DumbPlots.getInstance());
 		config.load();
 		config.set("owner", "CONSOLE");
-		config.set("id", plotid);
+		config.set("plot-name", plotid);
+		config.set("id", id);
 		config.set("claimed", false);
 		config.set("corners", corners);
 		config.set("chunks", chunks);
@@ -160,90 +163,111 @@ public class Plot {
 		return plot;
 	}
 
-	private EnhancedConfiguration config;
+	private long sysId;
+	private String name, owner, world;
 	private List<CornerPlotCorner> corners = new ArrayList<CornerPlotCorner>();
 	private List<ChunkLoc> chunks = new ArrayList<ChunkLoc>();
+	private List<String> allowed = new ArrayList<String>();
+	private PlotType state = PlotType.UNCLAIMED;
+	private File file;
 
-	public Plot(File plotfile) {
-		config = new EnhancedConfiguration(plotfile, DumbPlots.getInstance());
+	public Plot(File file) {
+		this.file = file;
+		DumbPlots plugin = DumbPlots.getInstance();
+		EnhancedConfiguration config = new EnhancedConfiguration(file, plugin);
 		config.load();
 		// Load corners and chunks
 		List<String> ccorners = config.getStringList("corners");
+		if (ccorners == null)
+			ccorners = new ArrayList<String>();
 		for(String corner : ccorners) {
 			corners.add(new CornerPlotCorner(corner, getWorld().getName()));
 		}
 		List<String> cchunks = config.getStringList("chunks");
+		if (cchunks == null)
+			cchunks = new ArrayList<String>();
 		for(String chunk : cchunks) {
 			ChunkLoc loc = new ChunkLoc(chunk);
 			chunks.add(loc);
 		}
+		name = config.getString("plot-name", "UNCLAIMED");
+		owner = config.getString("owner", "CONSOLE");
+		world = config.getString("world", "world");
+		state = config.getBoolean("claimed", false) ? PlotType.CLAIMED : PlotType.UNCLAIMED;
+		this.sysId = config.getLong("id", 0);
+	}
+
+	public void save() {
+		DumbPlots plugin = DumbPlots.getInstance();
+		EnhancedConfiguration config = new EnhancedConfiguration(file, plugin);
+		config.load();
+		config.set("owner", "CONSOLE");
+		config.set("plot-name", name);
+		config.set("id", sysId);
+		config.set("claimed", state == PlotType.CLAIMED);
+		List<String> c = new ArrayList<String>();
+		for(CornerPlotCorner co : corners) {
+			c.add(co.toString());
+		}
+		config.set("corners", c);
+		c.clear();
+		for(ChunkLoc lo : chunks) {
+			c.add(lo.toString());
+		}
+		config.set("chunks", c);
+		config.set("world", world);
+		config.save();
+	}
+
+	public long getId() {
+		return sysId;
+	}
+
+	public void setId(long id) {
+		this.sysId = id;
 	}
 
 	public boolean addAllowedMember(OfflinePlayer player) {
-		config.load();
-		List<String> members = config.getStringList("allowed");
-		boolean added = members.add(player.getName());
-		config.set("allowed", members);
-		config.save();
-		return added;
+		return allowed.add(player.getName());
 	}
 
 	public boolean removeAllowedMember(OfflinePlayer player) {
-		config.load();
-		List<String> members = config.getStringList("allowed");
-		boolean removed = members.remove(player.getName());
-		config.set("allowed", members);
-		config.save();
-		return removed;
+		return allowed.remove(player.getName());
 	}
 
 	public boolean isAllowed(OfflinePlayer player) {
-		config.load();
-		return getAllowedMembers().contains(player.getName());
+		return allowed.contains(player.getName());
 	}
 
 	public List<String> getAllowedMembers() {
-		config.load();
-		List<String> members = config.getStringList("allowed");
-		if (members == null) {
-			members = new ArrayList<String>();
-		}
-		members.add(getOwner());
-		return Collections.unmodifiableList(members);
+		return Collections.unmodifiableList(allowed);
 	}
 
 	public void setWorld(World world) {
-		config.set("world", world.getName());
-		config.save();
+		this.world = world.getName();
 		assignCorners();
 	}
 
 	public World getWorld() {
-		String name = config.getString("world");
-		return DumbPlots.getInstance().getServer().getWorld(name);
+		return DumbPlots.getInstance().getServer().getWorld(world);
 	}
 
 	public void setOwner(String name) {
-		config.set("owner", name);
-		config.save();
+		this.owner = name;
 		assignCorners();
 	}
 
-	public void setID(String id) {
-		if (id.length() > 50) {
-			throw new IllegalArgumentException();
-		}
-		config.set("id", id);
-		config.save();
+	public void setName(String id) {
+		this.name = id;
 		assignCorners();
 	}
 
 	public String getOwner() {
-		return config.getString("owner");
+		return owner;
 	}
 
-	public String getID() {
-		return config.getString("id");
+	public String getName() {
+		return name;
 	}
 
 	/**
@@ -266,23 +290,12 @@ public class Plot {
 	}
 
 	public void setPlotType(PlotType type) {
-		switch (type) {
-		case CLAIMED:
-			config.set("claimed", true);
-			config.save();
-			break;
-		case UNCLAIMED:
-			config.set("claimed", false);
-			config.save();
-			break;
-		default:
-			break;
-		}
+		this.state = type;
 		assignCorners();
 	}
 
 	public PlotType getPlotType() {
-		return config.getBoolean("claimed") ? PlotType.CLAIMED : PlotType.UNCLAIMED;
+		return state;
 	}
 
 	public List<CornerPlotCorner> getCorners() {
@@ -295,7 +308,7 @@ public class Plot {
 
 	public void assignCorners() {
 		for(CornerPlotCorner corner : getCorners()) {
-			corner.getCorner().setID(getID(), corner.getType());
+			corner.getCorner().setName(getName(), corner.getType());
 			corner.getCorner().setOwner(getOwner(), corner.getType());
 		}
 	}

@@ -61,4 +61,9 @@ public class CornerPlotCorner {
 		return corner;
 	}
 
+	@Override
+	public String toString() {
+		return type.name() + "=" + location.toString();
+	}
+
 }

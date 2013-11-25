@@ -76,7 +76,7 @@ public class DebugListener implements Listener {
 				if (plot == null) {
 					player.sendMessage("Null Plot");
 				} else {
-					player.sendMessage("PID = " + plot.getID());
+					player.sendMessage("PID = " + plot.getName());
 				}
 				event.setCancelled(true);
 			}
@@ -87,13 +87,13 @@ public class DebugListener implements Listener {
 				for(Plot plot : plugin.getPlotManager().getAllPlots()) {
 					if (plot.has(block.getLocation())) {
 						foundIn = plot;
-						player.sendMessage("FOUND IN " + plot.getID());
+						player.sendMessage("FOUND IN " + plot.getName());
 					} else {
-						player.sendMessage("NOT IN " + plot.getID());
+						player.sendMessage("NOT IN " + plot.getName());
 					}
 				}
 				if (foundIn != null) {
-					player.sendMessage(">> FOUND IN " + foundIn.getID());
+					player.sendMessage(">> FOUND IN " + foundIn.getName());
 				} else {
 					player.sendMessage(">> Not found anywhere");
 				}

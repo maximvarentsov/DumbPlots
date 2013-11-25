@@ -35,7 +35,7 @@ public class ResetPlot {
 				PlotCorner plotCorner = new PlotCorner(chunkl.getX(), cz, plot.getWorld().getName());
 				CornerType corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
-					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getID())) {
+					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getName())) {
 						corner = c;
 						break;
 					}
@@ -56,7 +56,7 @@ public class ResetPlot {
 				plotCorner = new PlotCorner(cx, chunkl.getZ(), plot.getWorld().getName());
 				corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
-					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getID())) {
+					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getName())) {
 						corner = c;
 						break;
 					}
@@ -68,7 +68,7 @@ public class ResetPlot {
 				plotCorner = new PlotCorner(chunkl.getX(), chunkl.getZ(), plot.getWorld().getName());
 				corner = CornerType.UNKNOWN;
 				for(CornerType c : CornerType.values()) {
-					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getID())) {
+					if (plotCorner.getID(c) != null && plotCorner.getID(c).equals(plot.getName())) {
 						corner = c;
 						break;
 					}
