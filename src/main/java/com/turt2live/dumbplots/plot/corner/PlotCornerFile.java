@@ -31,6 +31,8 @@ public class PlotCornerFile {
 	}
 
 	private int getFilePosition(int cx, int cz, boolean read) {
+		cx = Math.abs(cx);
+		cz = Math.abs(cz);
 		return (cx * maxCoord * BLOCK_SIZE) + (cz * BLOCK_SIZE);
 	}
 

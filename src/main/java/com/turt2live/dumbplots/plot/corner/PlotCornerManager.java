@@ -49,12 +49,8 @@ public class PlotCornerManager {
 		if (corner != null) {
 			Map<ChunkLoc, PlotCorner> map = corners.get(world);
 			if (map == null) {
-				load(chunkX, chunkZ, world);
-				map = corners.get(world);
-				if (map == null) {
-					map = new HashMap<ChunkLoc, PlotCorner>();
-					corners.put(world, map);
-				}
+				map = new HashMap<ChunkLoc, PlotCorner>();
+				corners.put(world, map);
 			}
 			map.put(new ChunkLoc(chunkX, chunkZ), corner);
 		}
