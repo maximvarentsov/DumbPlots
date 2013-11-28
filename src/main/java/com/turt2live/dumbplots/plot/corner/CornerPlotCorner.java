@@ -1,5 +1,6 @@
 package com.turt2live.dumbplots.plot.corner;
 
+import com.turt2live.dumbplots.DumbPlots;
 import com.turt2live.dumbplots.plot.ChunkLoc;
 
 public class CornerPlotCorner {
@@ -37,7 +38,7 @@ public class CornerPlotCorner {
 			throw new IllegalArgumentException("Corner is not in the format C=X,Z (Error type 1)");
 		}
 		this.valid = true;
-		this.corner = new PlotCorner(x, z, world);
+		this.corner = DumbPlots.getInstance().getCornerManager().getCorner(x, z, world);
 		this.type = CornerType.valueOf(cornerType);
 		this.location = new ChunkLoc(x, z);
 	}

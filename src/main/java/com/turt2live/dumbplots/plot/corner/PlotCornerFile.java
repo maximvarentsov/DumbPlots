@@ -30,7 +30,7 @@ public class PlotCornerFile {
 		this.maxCoord = max;
 	}
 
-	private int getFilePosition(int cx, int cz, boolean read) {
+	private int getFilePosition(int cx, int cz) {
 		cx = Math.abs(cx);
 		cz = Math.abs(cz);
 		return (cx * maxCoord * BLOCK_SIZE) + (cz * BLOCK_SIZE);
@@ -52,7 +52,7 @@ public class PlotCornerFile {
 		buffer.put(FOOTER_BYTE);
 		buffer.flip();
 		try {
-			channel.position(getFilePosition(corner.getX(), corner.getZ(), false));
+			channel.position(getFilePosition(corner.getX(), corner.getZ()));
 			channel.write(buffer);
 		} catch(IOException e) {
 			e.printStackTrace();
@@ -60,7 +60,7 @@ public class PlotCornerFile {
 	}
 
 	public PlotCorner getCorner(int cx, int cz, String world) {
-		int position = getFilePosition(cx, cz, true);
+		int position = getFilePosition(cx, cz);
 		PlotCorner corner = new PlotCorner(cx, cz, world);
 		try {
 			channel.position(position);

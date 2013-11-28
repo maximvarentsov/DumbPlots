@@ -1,6 +1,6 @@
 package com.turt2live.dumbplots.plot.corner;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.turt2live.dumbplots.DumbPlots;
@@ -8,7 +8,7 @@ import com.turt2live.dumbplots.plot.ChunkLoc;
 
 public class PlotCornerManager {
 
-	private Map<String, Map<ChunkLoc, PlotCorner>> corners = new HashMap<String, Map<ChunkLoc, PlotCorner>>();
+	private Map<String, Map<ChunkLoc, PlotCorner>> corners = new LinkedHashMap<String, Map<ChunkLoc, PlotCorner>>();
 
 	public void save() {
 		for(String world : corners.keySet()) {
@@ -25,11 +25,11 @@ public class PlotCornerManager {
 
 	public PlotCorner getCorner(int chunkX, int chunkZ, String world) {
 		Map<ChunkLoc, PlotCorner> map = corners.get(world);
-		if (map == null) {
+		if (map == null || map.isEmpty()) {
 			load(chunkX, chunkZ, world);
 			map = corners.get(world);
 			if (map == null) {
-				map = new HashMap<ChunkLoc, PlotCorner>();
+				map = new LinkedHashMap<ChunkLoc, PlotCorner>();
 				corners.put(world, map);
 			}
 		}
@@ -49,7 +49,7 @@ public class PlotCornerManager {
 		if (corner != null) {
 			Map<ChunkLoc, PlotCorner> map = corners.get(world);
 			if (map == null) {
-				map = new HashMap<ChunkLoc, PlotCorner>();
+				map = new LinkedHashMap<ChunkLoc, PlotCorner>();
 				corners.put(world, map);
 			}
 			map.put(new ChunkLoc(chunkX, chunkZ), corner);

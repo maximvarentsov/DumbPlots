@@ -110,6 +110,10 @@ public class DumbUtil {
 	}
 
 	public static Plot getPlot(Location location) {
+		return getPlot(location, true);
+	}
+
+	public static Plot getPlot(Location location, boolean create) {
 		if (isPlotPath(location) || !DumbPlots.getInstance().getPlotManager().isWorldManaged(location.getWorld())) {
 			return null;
 		} else {
@@ -251,9 +255,12 @@ public class DumbUtil {
 			if (id > 0) {
 				return DumbPlots.getInstance().getPlotManager().getPlot(id);
 			} else {
-				Plot plot = Plot.generateUnclaimedPlot(location);
-				DumbPlots.getInstance().getPlotManager().addPlot(plot);
-				return plot;
+				if (create) {
+					Plot plot = Plot.generateUnclaimedPlot(location);
+					DumbPlots.getInstance().getPlotManager().addPlot(plot);
+					return plot;
+				}
+				return null;
 			}
 		}
 	}
@@ -451,11 +458,6 @@ public class DumbUtil {
 	public static Plot getPlot(int x, int z, World world) {
 		Location location = new Location(world, (x * 64) + ((x * 64) < 0 ? -23 : 23), 16, (z * 64) + ((z * 64) < 0 ? -23 : 23));
 		return getPlot(location);
-	}
-
-	public static long nextId() {
-		return 0; // TODO
-		// 0 is console
 	}
 
 }

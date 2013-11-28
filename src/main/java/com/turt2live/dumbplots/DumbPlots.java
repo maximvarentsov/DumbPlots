@@ -30,6 +30,7 @@ public class DumbPlots extends PluginWrapper implements Listener {
 	private PlotManager plots;
 	private PlotsCommands commands;
 	private PlotCornerManager corners;
+	private long lastId = 0;
 
 	@Override
 	public void onEnable() {
@@ -41,6 +42,8 @@ public class DumbPlots extends PluginWrapper implements Listener {
 			getConfig().saveDefaults();
 		}
 		getConfig().load();
+
+		lastId = getConfig().getLong("last-id", 0);
 
 		// Setup manager
 		corners = new PlotCornerManager();
@@ -74,6 +77,7 @@ public class DumbPlots extends PluginWrapper implements Listener {
 						World world = getServer().createWorld(creator);
 						world.setSpawnLocation(0, getConfig().getInt("world-height", 16) + 2, 0);
 						world.setGameRuleValue("doMobSpawning", "false");
+						world.setGameRuleValue("doDaylightCycle", "false");
 					}
 					getLogger().info("Worlds loaded!");
 				}
@@ -90,11 +94,14 @@ public class DumbPlots extends PluginWrapper implements Listener {
 		commands.saveDebugModePlayers();
 		plots.save();
 		corners.save();
-		commands = null;
-		plots = null;
-		corners = null;
+		getConfig().set("last-id", lastId);
+		saveConfig();
 		instance = null;
 		getLogger().info("Disabled! Plugin by turt2live");
+	}
+
+	public static long nextId() {
+		return ++instance.lastId;
 	}
 
 	public static DumbPlots getInstance() {

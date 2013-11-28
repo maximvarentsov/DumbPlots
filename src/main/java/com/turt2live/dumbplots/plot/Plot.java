@@ -21,18 +21,46 @@ public class Plot {
 		UNCLAIMED, CLAIMED, INVALID;
 	}
 
+	// TODO: Avoid creation of files for unclaimed plots
 	public static Plot generateUnclaimedPlot(Location location) {
 		Plot plot = null;
 		if (DumbUtil.isPlotPath(location)) {
 			return null;
 		}
-		long id = DumbUtil.nextId();
+
+		Plot existing = DumbUtil.getPlot(location, false);
+		if (existing != null) {
+			return existing;
+		}
+
+		// TODO REMOVE
+		try {
+			throw new Exception();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+
+		long id = DumbPlots.nextId();
 		String plotid = DumbUtil.generateUnclaimedID();
 		List<String> corners = new ArrayList<String>();
 		List<String> chunks = new ArrayList<String>();
+
+		// Load config
+		File path = new File(DumbPlots.getInstance().getDataFolder(), "plots");
+		if (!path.exists()) {
+			path.mkdirs();
+		}
+		File file = new File(path, plotid + ".yml");
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
+			} catch(IOException e) {} // Consume
+		}
+		EnhancedConfiguration config = new EnhancedConfiguration(file, DumbPlots.getInstance());
+		config.load();
+
 		// Find 4 corners
 		ChunkLoc[] abcdCorners = {null, null, null, null};
-		// CornerPlotCorner
 		int chunkX = location.getChunk().getX();
 		int chunkZ = location.getChunk().getZ();
 		ChunkType initType = DumbUtil.getChunkType(chunkX, chunkZ);
@@ -139,18 +167,6 @@ public class Plot {
 			}
 		}
 		// Save
-		File path = new File(DumbPlots.getInstance().getDataFolder(), "plots");
-		if (!path.exists()) {
-			path.mkdirs();
-		}
-		File file = new File(path, plotid + ".yml");
-		if (!file.exists()) {
-			try {
-				file.createNewFile();
-			} catch(IOException e) {} // Consume
-		}
-		EnhancedConfiguration config = new EnhancedConfiguration(file, DumbPlots.getInstance());
-		config.load();
 		config.set("owner", "CONSOLE");
 		config.set("plot-name", plotid);
 		config.set("id", id);
@@ -204,7 +220,7 @@ public class Plot {
 		DumbPlots plugin = DumbPlots.getInstance();
 		EnhancedConfiguration config = new EnhancedConfiguration(file, plugin);
 		config.load();
-		config.set("owner", "CONSOLE");
+		config.set("owner", owner);
 		config.set("plot-name", name);
 		config.set("id", sysId);
 		config.set("claimed", state == PlotType.CLAIMED);
@@ -213,7 +229,7 @@ public class Plot {
 			c.add(co.toString());
 		}
 		config.set("corners", c);
-		c.clear();
+		c = new ArrayList<String>();
 		for(ChunkLoc lo : chunks) {
 			c.add(lo.toString());
 		}
