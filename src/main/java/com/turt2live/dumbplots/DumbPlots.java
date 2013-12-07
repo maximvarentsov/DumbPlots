@@ -16,6 +16,10 @@ import com.feildmaster.lib.configuration.PluginWrapper;
 import com.turt2live.dumbplots.listener.DebugListener;
 import com.turt2live.dumbplots.listener.EnvironmentListener;
 import com.turt2live.dumbplots.listener.PlotsListener;
+import com.turt2live.dumbplots.plot.corner.CornerType;
+import com.turt2live.dumbplots.plot.corner.FileMode;
+import com.turt2live.dumbplots.plot.corner.PlotCorner;
+import com.turt2live.dumbplots.plot.corner.PlotCornerFile;
 import com.turt2live.dumbplots.plot.corner.PlotCornerManager;
 import com.turt2live.dumbplots.terrain.TerrainGenerator;
 
@@ -32,6 +36,13 @@ public class DumbPlots extends PluginWrapper implements Listener {
 	private PlotCornerManager corners;
 	private long lastId = 0;
 
+	private void print(PlotCorner corner) {
+		System.out.println(corner);
+		for(CornerType co : CornerType.values()) {
+			System.out.println("\t" + co.name() + " " + corner.getId(co));
+		}
+	}
+
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -45,22 +56,50 @@ public class DumbPlots extends PluginWrapper implements Listener {
 
 		lastId = getConfig().getLong("last-id", 0);
 
-		// Setup manager
-		corners = new PlotCornerManager();
-		plots = new PlotManager();
-
-		// Commands setup
-		commands = new PlotsCommands();
-		getCommand("plot").setExecutor(commands);
-
-		// Listener
-		getServer().getPluginManager().registerEvents(new DebugListener(), this);
-		getServer().getPluginManager().registerEvents(new PlotsListener(), this);
-		getServer().getPluginManager().registerEvents(new EnvironmentListener(), this);
+		for(File file : getCornerPath().listFiles()) {
+			PlotCornerFile f = new PlotCornerFile(file, CHUNKS_PER_CORNER_FILE);
+			f.open(FileMode.OPEN);
+			System.out.println("File: " + file.getName());
+			int empty = 0, n = 0;
+			for(int x = 0; x < CHUNKS_PER_CORNER_FILE; x++) {
+				for(int z = 0; z < CHUNKS_PER_CORNER_FILE; z++) {
+					PlotCorner corner = f.getCorner(x, z, "world");
+					if (corner == null) {
+						n++;
+					} else {
+						boolean all = false;
+						for(CornerType co : CornerType.values()) {
+							if (corner.getId(co) > 0) {
+								print(corner);
+								all = true;
+								break;
+							}
+						}
+						if (!all) {
+							empty++;
+						}
+					}
+				}
+			}
+			System.out.println("empty: " + empty + " || Null: " + n);
+		}
 
 		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
 			@Override
 			public void run() {
+				// Setup manager
+				corners = new PlotCornerManager();
+				plots = new PlotManager();
+
+				// Commands setup
+				commands = new PlotsCommands();
+				getCommand("plot").setExecutor(commands);
+
+				// Listener
+				getServer().getPluginManager().registerEvents(new DebugListener(), instance);
+				getServer().getPluginManager().registerEvents(new PlotsListener(), instance);
+				getServer().getPluginManager().registerEvents(new EnvironmentListener(), instance);
+
 				// Load worlds for DumbPlots
 				List<String> worlds = getConfig().getStringList("worlds");
 				if (worlds != null) {
@@ -81,6 +120,8 @@ public class DumbPlots extends PluginWrapper implements Listener {
 					}
 					getLogger().info("Worlds loaded!");
 				}
+
+				plots.reload();
 			}
 		});
 

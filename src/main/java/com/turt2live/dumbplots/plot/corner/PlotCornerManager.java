@@ -26,9 +26,11 @@ public class PlotCornerManager {
 	public PlotCorner getCorner(int chunkX, int chunkZ, String world) {
 		Map<ChunkLoc, PlotCorner> map = corners.get(world);
 		if (map == null || map.isEmpty()) {
+			System.out.println("NULL");
 			load(chunkX, chunkZ, world);
 			map = corners.get(world);
 			if (map == null) {
+				System.out.println("STILL NULL");
 				map = new LinkedHashMap<ChunkLoc, PlotCorner>();
 				corners.put(world, map);
 			}
@@ -36,6 +38,7 @@ public class PlotCornerManager {
 		ChunkLoc cl = new ChunkLoc(chunkX, chunkZ);
 		PlotCorner corner = map.get(cl);
 		if (corner == null) {
+			System.out.println("CREATE");
 			corner = new PlotCorner(chunkX, chunkZ, world);
 			map.put(cl, corner);
 		}

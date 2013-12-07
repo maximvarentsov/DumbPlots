@@ -15,10 +15,6 @@ public class PlotManager {
 	private DumbPlots plugin = DumbPlots.getInstance();
 	private List<Plot> plots = new ArrayList<Plot>();
 
-	public PlotManager() {
-		reload();
-	}
-
 	public String getPlotID(OfflinePlayer player) {
 		return player.getName() + "_" + getOwnedPlots(player).size();
 		// First plot will be turt2live_0, next turt2live_1, etc

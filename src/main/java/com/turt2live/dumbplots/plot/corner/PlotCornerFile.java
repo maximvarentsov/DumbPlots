@@ -30,6 +30,11 @@ public class PlotCornerFile {
 		this.maxCoord = max;
 	}
 
+	public PlotCornerFile(File file, int max) {
+		this.file = file;
+		this.maxCoord = max;
+	}
+
 	private int getFilePosition(int cx, int cz) {
 		cx = Math.abs(cx);
 		cz = Math.abs(cz);
