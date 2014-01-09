@@ -22,6 +22,7 @@ public class DumbPlots extends PluginWrapper implements Listener {
 
     // TODO: Less creation of objects, more managers. Rewrite corners and plot data store
     // TODO: Save and load plot corners. Doesn't load/save correctly
+    // TODO: extend DumbPlugin - stats & stuff. dboId = 69167
 
     private static DumbPlots instance;
     public static final int CHUNKS_PER_CORNER_FILE = 128;
